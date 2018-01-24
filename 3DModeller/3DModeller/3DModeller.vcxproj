@@ -29,10 +29,11 @@
     <ClInclude Include="include\Project\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\Project\CubePrimitive.cpp" />
+    <ClCompile Include="include\Project\Scene.cpp" />
     <ClCompile Include="src\GLAD\glad.c" />
     <ClCompile Include="src\Project\Camera.cpp" />
-    <ClCompile Include="src\Project\CylinderPrimitve.cpp" />
+    <ClCompile Include="src\Project\CubePrimitive.cpp" />
+    <ClCompile Include="src\Project\CylinderPrimitive.cpp" />
     <ClCompile Include="src\Project\main.cpp" />
     <ClCompile Include="src\Project\Shader.cpp" />
     <ClCompile Include="src\Project\SpherePrimitive.cpp" />

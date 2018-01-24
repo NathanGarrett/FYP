@@ -62,14 +62,17 @@
     <ClCompile Include="src\Project\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Project\CubePrimitive.cpp">
+    <ClCompile Include="src\Project\CubePrimitive.cpp">
       <Filter>Source Files\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="src\Project\CylinderPrimitve.cpp">
+    <ClCompile Include="src\Project\CylinderPrimitive.cpp">
       <Filter>Source Files\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\SpherePrimitive.cpp">
       <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Project\Scene.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

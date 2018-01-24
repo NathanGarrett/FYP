@@ -20,7 +20,6 @@ public:
 
 	void render(Camera camera);	//Render the scene
 
-	void resize(Camera camera, int w, int h); //Resize
 	void GenPrimitive(std::string type);
 	
 private:
@@ -33,5 +32,5 @@ private:
 	void compileAndLinkShader(); //Compile and link the shader
 
 };
-};
+
 

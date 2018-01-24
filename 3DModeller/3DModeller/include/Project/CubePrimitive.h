@@ -10,9 +10,6 @@ public:
 	virtual void onSelect() override;
 private:
 	unsigned int vaoHandle; //pos of vao
-	int faces; //number of faces shape has
-	unsigned int textureID; //texture location
-	GLuint VBO, boxVAO;
-	std::vector<unsigned int> indices;
+	
 };
 

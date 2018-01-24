@@ -5,9 +5,7 @@
 #include <GLFW\glfw3.h>
 //other includes 
 #include <iostream>
-#include <Project/Camera.h>
-#include <Project\Shader.h>
-#include <Project\CubePrimitive.h>
+#include <Project\Scene.h>
 
 #pragma region Inputs
 void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mode);

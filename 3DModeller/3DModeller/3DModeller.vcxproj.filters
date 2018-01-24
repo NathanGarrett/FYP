@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Primitives">
       <UniqueIdentifier>{d112f129-b64f-4ae8-9ccd-cccbaad07411}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Primitives">
+      <UniqueIdentifier>{7043fffd-355b-4303-8d68-9cd3c05c9349}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Project\Window.h">
@@ -29,6 +32,18 @@
     </ClInclude>
     <ClInclude Include="include\Project\VBOPrimitive.h">
       <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\CubePrimitive.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderPrimitive.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\SpherePrimitive.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\Scene.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +61,15 @@
     </ClCompile>
     <ClCompile Include="src\Project\Shader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Project\CubePrimitive.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\CylinderPrimitve.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\SpherePrimitive.cpp">
+      <Filter>Source Files\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

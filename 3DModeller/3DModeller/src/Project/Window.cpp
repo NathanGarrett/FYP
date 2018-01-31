@@ -1,6 +1,6 @@
 #include <Project/Window.h>
 
-Camera *camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera* camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 GLfloat flastX = 1280 / 2.0f;
 GLfloat flastY = 720 / 2.0f;
 
@@ -57,22 +57,11 @@ void Window::InitWindow()
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
+	scene = new Scene();
+	scene->initScene(*camera);
 
 
-	//shader setup for basic shader
-	glm::mat4 model(1.0f);
-	program.compileShader("res/defaultShader.vert");
-	program.compileShader("res/defaultShader.frag");
-	program.link();
-	program.validate();
-	program.use();
-	//set uniform vars
-	program.setUniform("colour", glm::vec3(0.75, 0.0, 0.75));
 	
-	//simple triangle set up to test mouse click
-
-
-	Update();
 	
 }
 
@@ -83,9 +72,9 @@ void Window::Update()
 		GLfloat currentFrame = glfwGetTime();
 		fDeltaTime = currentFrame - lastframe;
 		lastframe = currentFrame;
-		// clear the screen to a green colour
 		
-		glfwPollEvents();
+		glClearColor(1.f, 1.f, 1.f, 1.f);
+		glfwWaitEvents();
 		DoMovement();
 		Render();
 		// swap buffers i.e. draw to screen
@@ -97,37 +86,11 @@ void Window::Update()
 
 void Window::Render()
 {
-	static const GLfloat g_vertex_buffer_data[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f,  0.5f, 0.0f,
-	};
-	// This will identify our vertex buffer
-	GLuint vertexbuffer;
-	// Generate 1 buffer, put the resulting identifier in vertexbuffer
-	glGenBuffers(1, &vertexbuffer);
-	// The following commands will talk about our 'vertexbuffer' buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-	// 1rst attribute buffer : vertices
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-	glDisableVertexAttribArray(0);
-
-
-
+	if (abkeys[GLFW_KEY_INSERT] && abkeys[GLFW_KEY_C])
+	{
+		scene->GenModel("ogre.obj");
+	}
+	scene->render(*camera);
 }
 #pragma region Getters
 GLFWwindow * Window::GetWindow()
@@ -180,10 +143,11 @@ void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mod
 		camera->ResetCamera();
 	}
 
+	
 }
 void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
 {	
-		std::cout << "SCB" << std::endl;
+		
 		camera->ScrollProc(yOffset);
 }
 
@@ -191,7 +155,7 @@ void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 {
 	if (abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
-		std::cout << "MCB" << std::endl;
+		
 		if (bFirstMouse)
 		{
 			flastX = xPos;
@@ -214,7 +178,7 @@ void DoMovement()
 {
 	if (abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
-		std::cout << "Do movement" << std::endl;
+		
 		if (abkeys[GLFW_KEY_W] || abkeys[GLFW_KEY_UP])
 		{
 			camera->KeyProc(FORWARD, fDeltaTime);
@@ -231,7 +195,7 @@ void DoMovement()
 		{
 			camera->KeyProc(RIGHT, fDeltaTime);
 		}
-		std::cout << camera->GetCamPos().x<< camera->GetCamPos().y << camera->GetCamPos().z<< std::endl;
+		
 	}
 };
 #pragma endregion
@@ -260,7 +224,7 @@ glm::vec3 Window::getRay()
 	ray_world.y = (glm::inverse(camera->GetViewMatrix())* ray_eye).y;
 	ray_world.z = (glm::inverse(camera->GetViewMatrix())* ray_eye).z;
 
-	std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
+	//std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
 	return ray_world;
 }
 

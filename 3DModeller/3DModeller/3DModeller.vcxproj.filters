@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Primitives">
-      <UniqueIdentifier>{d112f129-b64f-4ae8-9ccd-cccbaad07411}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Primitives">
-      <UniqueIdentifier>{7043fffd-355b-4303-8d68-9cd3c05c9349}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Project\Window.h">
@@ -30,19 +24,25 @@
     <ClInclude Include="include\Project\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Project\VBOPrimitive.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Project\CubePrimitive.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="CylinderPrimitive.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Project\SpherePrimitive.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="include\Project\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\drawable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Project\vbomesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,16 +62,19 @@
     <ClCompile Include="src\Project\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Project\CubePrimitive.cpp">
-      <Filter>Source Files\Primitives</Filter>
+    <ClCompile Include="src\Project\Bitmap.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Project\CylinderPrimitive.cpp">
-      <Filter>Source Files\Primitives</Filter>
+    <ClCompile Include="src\Project\drawable.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Project\SpherePrimitive.cpp">
-      <Filter>Source Files\Primitives</Filter>
+    <ClCompile Include="src\Project\Texture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Project\Scene.cpp">
+    <ClCompile Include="src\Project\vbomesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,6 +83,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\defaultShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\normalShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\normalShader.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

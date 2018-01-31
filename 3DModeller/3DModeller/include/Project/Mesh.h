@@ -1,8 +1,8 @@
 #pragma once
 
-#include "glm.hpp"
+#include <GLM\glm.hpp>
 #include <vector>
-#include "gl_core_4_3.hpp"
+#include <GLFW\glfw3.h>
 
 struct Mesh
 {

@@ -1,5 +1,5 @@
-#include "vbomesh.h"
-#include "glutils.h"
+#include "Project/vbomesh.h"
+
 
 #define uint unsigned int
 
@@ -13,7 +13,7 @@ using std::ifstream;
 using std::istringstream;
 
 
-#include "gl_core_4_3.hpp"
+
 
 VBOMesh::VBOMesh(const char * fileName, bool center, bool loadTc, bool genTangents) :
         reCenterMesh(center), loadTex(loadTc), genTang(genTangents)
@@ -22,8 +22,8 @@ VBOMesh::VBOMesh(const char * fileName, bool center, bool loadTc, bool genTangen
 }
 
 void VBOMesh::render() const {
-    gl::BindVertexArray(vaoHandle);
-    gl::DrawElements(gl::TRIANGLES, 3 * faces, gl::UNSIGNED_INT, ((GLubyte *)NULL + (0)));
+    glBindVertexArray(vaoHandle);
+    glDrawElements(GL_TRIANGLES, 3 * faces, GL_UNSIGNED_INT, ((GLubyte *)NULL + (0)));
 }
 
 void VBOMesh::loadOBJ( const char * fileName ) {
@@ -327,8 +327,8 @@ void VBOMesh::storeVBO( const vector<vec3> & points,
     {
         el[i] = elements[i];
     }
-    gl::GenVertexArrays( 1, &vaoHandle );
-    gl::BindVertexArray(vaoHandle);
+    glGenVertexArrays( 1, &vaoHandle );
+    glBindVertexArray(vaoHandle);
 
     int nBuffers = 3;
     if( tc != NULL ) nBuffers++;
@@ -337,35 +337,35 @@ void VBOMesh::storeVBO( const vector<vec3> & points,
 
     uint handle[5];
     uint bufIdx = 0;
-    gl::GenBuffers(nBuffers, handle);
+    glGenBuffers(nBuffers, handle);
 
-    gl::BindBuffer(gl::ARRAY_BUFFER, handle[bufIdx++]);
-    gl::BufferData(gl::ARRAY_BUFFER, (3 * nVerts) * sizeof(float), v, gl::STATIC_DRAW);
-    gl::VertexAttribPointer( (GLuint)0, 3, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)) );
-    gl::EnableVertexAttribArray(0);  // Vertex position
+    glBindBuffer(GL_ARRAY_BUFFER, handle[bufIdx++]);
+    glBufferData(GL_ARRAY_BUFFER, (3 * nVerts) * sizeof(float), v, GL_STATIC_DRAW);
+    glVertexAttribPointer( (GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
+    glEnableVertexAttribArray(0);  // Vertex position
 
-    gl::BindBuffer(gl::ARRAY_BUFFER, handle[bufIdx++]);
-    gl::BufferData(gl::ARRAY_BUFFER, (3 * nVerts) * sizeof(float), n, gl::STATIC_DRAW);
-    gl::VertexAttribPointer( (GLuint)1, 3, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)) );
-    gl::EnableVertexAttribArray(1);  // Vertex normal
+    glBindBuffer(GL_ARRAY_BUFFER, handle[bufIdx++]);
+    glBufferData(GL_ARRAY_BUFFER, (3 * nVerts) * sizeof(float), n, GL_STATIC_DRAW);
+    glVertexAttribPointer( (GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
+    glEnableVertexAttribArray(1);  // Vertex normal
 
     if( tc != NULL ) {
-        gl::BindBuffer(gl::ARRAY_BUFFER, handle[bufIdx++]);
-        gl::BufferData(gl::ARRAY_BUFFER, (2 * nVerts) * sizeof(float), tc, gl::STATIC_DRAW);
-        gl::VertexAttribPointer( (GLuint)2, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)) );
-        gl::EnableVertexAttribArray(2);  // Texture coords
+        glBindBuffer(GL_ARRAY_BUFFER, handle[bufIdx++]);
+        glBufferData(GL_ARRAY_BUFFER, (2 * nVerts) * sizeof(float), tc, GL_STATIC_DRAW);
+        glVertexAttribPointer( (GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
+        glEnableVertexAttribArray(2);  // Texture coords
     }
     if( tang != NULL ) {
-        gl::BindBuffer(gl::ARRAY_BUFFER, handle[bufIdx++]);
-        gl::BufferData(gl::ARRAY_BUFFER, (4 * nVerts) * sizeof(float), tang, gl::STATIC_DRAW);
-        gl::VertexAttribPointer( (GLuint)3, 4, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)) );
-        gl::EnableVertexAttribArray(3);  // Tangent vector
+        glBindBuffer(GL_ARRAY_BUFFER, handle[bufIdx++]);
+        glBufferData(GL_ARRAY_BUFFER, (4 * nVerts) * sizeof(float), tang, GL_STATIC_DRAW);
+        glVertexAttribPointer( (GLuint)3, 4, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)) );
+        glEnableVertexAttribArray(3);  // Tangent vector
     }
 
-    gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, handle[elementBuffer]);
-    gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, 3 * faces * sizeof(unsigned int), el, gl::STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[elementBuffer]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * faces * sizeof(unsigned int), el, GL_STATIC_DRAW);
 
-    gl::BindVertexArray(0);
+    glBindVertexArray(0);
 
     // Clean up
     delete [] v;

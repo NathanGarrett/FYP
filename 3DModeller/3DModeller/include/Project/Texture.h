@@ -1,8 +1,8 @@
 #pragma once
 
-#include "gl_core_4_3.hpp"
-#include "Bitmap.h"
-
+#include <GLFW\glfw3.h>
+#include <Project\Bitmap.h>
+#include <glad/glad.h>
 /**
 Represents an OpenGL texture
 */
@@ -20,8 +20,8 @@ public:
 	@param wrapMode GL_REPEAT, GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, or GL_CLAMP_TO_BORDER
 	*/
 	Texture(const Bitmap& bitmap,
-		GLint minMagFiler = gl::LINEAR,
-		GLint wrapMode = gl::CLAMP_TO_EDGE);
+		GLint minMagFiler = GL_LINEAR,
+		GLint wrapMode = GL_CLAMP_TO_EDGE);
 
 	/**
 	Deletes the texture object with glDeleteTextures

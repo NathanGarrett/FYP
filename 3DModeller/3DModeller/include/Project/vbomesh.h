@@ -5,7 +5,9 @@
 
 #include <vector>
 using std::vector;
-#include "glm.hpp"
+#include <glm/glm.hpp>
+#include <GLFW\glfw3.h>
+#include <GLAD\glad.h>
 using glm::vec3;
 using glm::vec2;
 using glm::vec4;

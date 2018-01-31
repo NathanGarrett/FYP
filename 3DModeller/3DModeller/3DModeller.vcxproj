@@ -19,29 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CylinderPrimitive.h" />
+    <ClInclude Include="include\Project\Bitmap.h" />
     <ClInclude Include="include\Project\Camera.h" />
-    <ClInclude Include="include\Project\CubePrimitive.h" />
+    <ClInclude Include="include\Project\drawable.h" />
+    <ClInclude Include="include\Project\Mesh.h" />
     <ClInclude Include="include\Project\Scene.h" />
     <ClInclude Include="include\Project\Shader.h" />
-    <ClInclude Include="include\Project\SpherePrimitive.h" />
-    <ClInclude Include="include\Project\VBOPrimitive.h" />
+    <ClInclude Include="include\Project\Texture.h" />
+    <ClInclude Include="include\Project\vbomesh.h" />
     <ClInclude Include="include\Project\Window.h" />
+    <ClInclude Include="include\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\Project\Scene.cpp" />
     <ClCompile Include="src\GLAD\glad.c" />
+    <ClCompile Include="src\Project\Bitmap.cpp" />
     <ClCompile Include="src\Project\Camera.cpp" />
-    <ClCompile Include="src\Project\CubePrimitive.cpp" />
-    <ClCompile Include="src\Project\CylinderPrimitive.cpp" />
+    <ClCompile Include="src\Project\drawable.cpp" />
     <ClCompile Include="src\Project\main.cpp" />
+    <ClCompile Include="src\Project\Scene.cpp" />
     <ClCompile Include="src\Project\Shader.cpp" />
-    <ClCompile Include="src\Project\SpherePrimitive.cpp" />
+    <ClCompile Include="src\Project\Texture.cpp" />
+    <ClCompile Include="src\Project\vbomesh.cpp" />
     <ClCompile Include="src\Project\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\defaultShader.frag" />
     <None Include="res\defaultShader.vert" />
+    <None Include="res\normalShader.frag" />
+    <None Include="res\normalShader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5242C98B-425A-45AE-8B64-8245EDAD1D5A}</ProjectGuid>
@@ -137,6 +142,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

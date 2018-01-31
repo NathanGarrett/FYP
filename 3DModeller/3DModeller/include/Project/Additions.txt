@@ -10,3 +10,9 @@ Bitmap.cpp
 vboMesh.cpp
 drawable.cpp
 texture.cpp
+
+
+Today's goals:
+1. Refactor drawing into scene.h from window
+2. Change triangle into a cube
+3. get clicker working

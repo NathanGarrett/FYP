@@ -18,7 +18,7 @@ int main()
 	
 
 	window.InitWindow();
-
+	window.Update();
 	// cleanup
 	glfwTerminate();
 	return 0;

@@ -1,11 +1,13 @@
 #pragma once
-#include <Project\CubePrimitive.h>
-#include <Project/CylinderPrimitive.h>
-#include <Project\SpherePrimitive.h>
+#include <Project/vbomesh.h>
 #include <Project/Camera.h>
 #include <Project/Shader.h>
-#include <GLM\glm.hpp>
+#include <Project/Bitmap.h>
+#include <Project/Texture.h>
+#include <GLM/glm.hpp>
 #include <GLFW/glfw3.h>
+
+
 class Scene
 {
 
@@ -20,17 +22,18 @@ public:
 
 	void render(Camera camera);	//Render the scene
 
-	void GenPrimitive(std::string type);
+	void GenModel(std::string model);
 	
 private:
-
-	Shader m_Default;
+	std::vector<VBOMesh*> m_Objects;
+	
 	int width, height;
-
-	glm::mat4 model; //Model matrix
-	void setMatrices(Camera camera, bool DrawSkyBox); //Set the camera matrices
+	glm::mat4 model = glm::mat4(1.0f); //Model matrix
+	void setMatrices(Camera camera); //Set the camera matrices
 	void compileAndLinkShader(); //Compile and link the shader
-
+	Shader m_DefaultShader;
+	Texture* m_defaultTexture;
+	Texture* m_defaultNormalMap;
 };
 
 

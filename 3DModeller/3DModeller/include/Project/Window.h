@@ -5,7 +5,9 @@
 #include <GLFW\glfw3.h>
 //other includes 
 #include <iostream>
-#include <Project\Scene.h>
+#include <Project/Camera.h>
+#include <Project/Scene.h>
+
 
 #pragma region Inputs
 void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mode);
@@ -22,15 +24,14 @@ public:
 	void InitWindow();
 	void Update();
 	void Render();
+	Scene* scene;
 	GLFWwindow* GetWindow();
 	GLuint GetHeight();
 	GLuint GetWidth();
-	Camera *GetCamera();
+	Camera* GetCamera();
 	glm::vec3 getRay();
 	void onCLick();
 private:
-	//CubePrimitive cube;
 	GLFWwindow* window;
-	Shader program;
 	const GLuint m_kiWidth = 1280, m_kiHeight = 720;
 };

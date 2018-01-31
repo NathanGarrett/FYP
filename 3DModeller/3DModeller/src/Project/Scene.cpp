@@ -9,8 +9,8 @@ Scene::Scene()
 
 void Scene::initScene(Camera camera)
 {
-	m_DefaultShader = Shader("res/normalShader.vert", "res/normalShader.frag");
-
+	
+	compileAndLinkShader();
 	glEnable(GL_DEPTH_TEST);
 	
 	//compileAndLinkShader();
@@ -32,7 +32,7 @@ void Scene::update(float t)
 
 void Scene::render(Camera camera)
 {
-	m_DefaultShader.Use();
+	m_DefaultShader.use();
 
 	m_DefaultShader.setUniform("lightPos", glm::vec3(0, 0, 10));
 	m_DefaultShader.setUniform("viewPos", camera.GetCamPos());
@@ -54,7 +54,7 @@ void Scene::render(Camera camera)
 		m_Objects[i]->render();
 		
 	}
-	m_DefaultShader.Disable();
+	
 }
 
 
@@ -66,14 +66,14 @@ void Scene::setMatrices(Camera camera)
 	m_DefaultShader.setUniform("Projection", camera.GetProjectionMatrix());
 }
 
-//void Scene::compileAndLinkShader()
-//{
-//	m_DefaultShader.compileShader("res/normalShader.vert");
-//	m_DefaultShader.compileShader("res/normalShader.frag");
-//	m_DefaultShader.link();
-//	m_DefaultShader.validate();
-//	
-//}
+void Scene::compileAndLinkShader()
+{
+	m_DefaultShader.compileShader("res/normalShader.vert");
+	m_DefaultShader.compileShader("res/normalShader.frag");
+	m_DefaultShader.link();
+	m_DefaultShader.validate();
+	
+}
 
 void Scene::GenModel(std::string model)
 {

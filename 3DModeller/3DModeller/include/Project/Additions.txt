@@ -13,5 +13,5 @@ texture.cpp
 
 
 Today's goals:
-1. get clicker working i.e. debug vertex, object and line collision
-2.Implement quatCamera
+1.Implement geometry shader to view faces
+2. get clicker working i.e. debug vertex, object and line collision

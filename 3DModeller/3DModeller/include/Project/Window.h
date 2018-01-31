@@ -29,8 +29,11 @@ public:
 	GLuint GetHeight();
 	GLuint GetWidth();
 	Camera* GetCamera();
+	
 	glm::vec3 getRay();
 	void onCLick();
+
+
 private:
 	GLFWwindow* window;
 	const GLuint m_kiWidth = 1280, m_kiHeight = 720;

@@ -13,6 +13,5 @@ texture.cpp
 
 
 Today's goals:
-1. Refactor drawing into scene.h from window
-2. Change triangle into a cube
-3. get clicker working
+1. get clicker working i.e. debug vertex, object and line collision
+2.Implement quatCamera

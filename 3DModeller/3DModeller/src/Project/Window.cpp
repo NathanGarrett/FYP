@@ -1,6 +1,6 @@
 #include <Project/Window.h>
 
-Camera* camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera* camera = new Camera(glm::vec3(0.0f, 0.0f, 10.0f));
 GLfloat flastX = 1280 / 2.0f;
 GLfloat flastY = 720 / 2.0f;
 
@@ -73,9 +73,11 @@ void Window::Update()
 		fDeltaTime = currentFrame - lastframe;
 		lastframe = currentFrame;
 		
-		glClearColor(1.f, 1.f, 1.f, 1.f);
-		glfwWaitEvents();
+		glClearColor(0.5f, 0.5f, 0.5f, 0.f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		DoMovement();
+		glfwWaitEvents();
+		
 		Render();
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
@@ -88,7 +90,7 @@ void Window::Render()
 {
 	if (abkeys[GLFW_KEY_INSERT] && abkeys[GLFW_KEY_C])
 	{
-		scene->GenModel("ogre.obj");
+		scene->GenModel("sphere.obj");
 	}
 	scene->render(*camera);
 }
@@ -223,7 +225,7 @@ glm::vec3 Window::getRay()
 	ray_world.x = (glm::inverse(camera->GetViewMatrix())* ray_eye).x;
 	ray_world.y = (glm::inverse(camera->GetViewMatrix())* ray_eye).y;
 	ray_world.z = (glm::inverse(camera->GetViewMatrix())* ray_eye).z;
-
+	glm::normalize(ray_world);
 	//std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
 	return ray_world;
 }

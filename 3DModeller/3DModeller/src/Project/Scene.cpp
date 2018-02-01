@@ -16,7 +16,7 @@ void Scene::initScene(Camera camera)
 	//compileAndLinkShader();
 	
 
-	Bitmap diffbmp = Bitmap::bitmapFromFile("textures/ogre_diffuse.png");
+	Bitmap diffbmp = Bitmap::bitmapFromFile("textures/rantex.png");
 	diffbmp.flipVertically();
 	m_defaultTexture = new Texture(diffbmp);
 	Bitmap normbmp = Bitmap::bitmapFromFile("textures/ogre_normalmap.png");

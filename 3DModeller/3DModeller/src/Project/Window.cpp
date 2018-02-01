@@ -88,7 +88,7 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (abkeys[GLFW_KEY_INSERT] && abkeys[GLFW_KEY_C])
+	if (abkeys[GLFW_KEY_RIGHT_CONTROL] && abkeys[GLFW_KEY_C])
 	{
 		scene->GenModel("sphere.obj");
 	}

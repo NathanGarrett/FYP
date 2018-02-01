@@ -47,6 +47,7 @@
     <None Include="res\defaultShader.vert" />
     <None Include="res\normalShader.frag" />
     <None Include="res\normalShader.vert" />
+    <None Include="res\wireframeShader.geom" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5242C98B-425A-45AE-8B64-8245EDAD1D5A}</ProjectGuid>

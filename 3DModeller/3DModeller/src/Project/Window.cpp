@@ -90,7 +90,7 @@ void Window::Render()
 {
 	if (abkeys[GLFW_KEY_RIGHT_CONTROL] && abkeys[GLFW_KEY_C])
 	{
-		scene->GenModel("sphere.obj");
+		scene->GenModel("ogre.obj");
 	}
 	scene->render(*camera);
 }

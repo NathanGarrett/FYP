@@ -45,6 +45,9 @@ void Scene::render(Camera camera)
 	glBindTexture(GL_TEXTURE_2D, m_defaultNormalMap->object());
 	m_DefaultShader.setUniform("normalmap", 1);
 
+	/*m_DefaultShader.setUniform("ViewPortMatrix", camera.GetProjectionMatrix());
+	m_DefaultShader.setUniform("Line.Width", 5.f);
+	m_DefaultShader.setUniform("Line.Color", glm::vec4(1.f, 1.f, 1.f, 1.f));*/
 	
 
 	for (int i = 0; i < m_Objects.size(); i++)
@@ -64,12 +67,15 @@ void Scene::setMatrices(Camera camera)
 	m_DefaultShader.setUniform("Model", model);
 	m_DefaultShader.setUniform("View", camera.GetViewMatrix());
 	m_DefaultShader.setUniform("Projection", camera.GetProjectionMatrix());
+	//m_DefaultShader.setUniform("ViewPortMatrix", GL_VIEWPORT);
 }
 
 void Scene::compileAndLinkShader()
 {
 	m_DefaultShader.compileShader("res/normalShader.vert");
 	m_DefaultShader.compileShader("res/normalShader.frag");
+	//m_DefaultShader.compileShader("res/wireframeShader.geom");
+
 	m_DefaultShader.link();
 	m_DefaultShader.validate();
 	

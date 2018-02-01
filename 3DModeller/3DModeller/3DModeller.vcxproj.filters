@@ -91,5 +91,8 @@
     <None Include="res\normalShader.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\wireframeShader.geom">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

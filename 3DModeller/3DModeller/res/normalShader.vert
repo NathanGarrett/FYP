@@ -14,6 +14,13 @@ out Data
 	vec3 TangentFragPos;
 } data_out;
 
+//out GeomData
+//{
+	//wireframe
+	//vec3 VNormal;
+	//vec3 VPosition;
+//} GeomData;
+
 uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
@@ -32,6 +39,10 @@ void main()
 	vec3 bitangent = normalize(cross(normal,tangent)*VertexTangent.w);  //Complete this
 	mat3 TBN = transpose(mat3(tangent,bitangent,normal));  //Complete this
 	//*********************************************//
+	
+
+	//GeomData.VNormal = normal;
+	//GeomData.VPosition = vec3(MV * vec4(VertexPosition, 1.0));
 
 	data_out.FragPos = vec3(Model * vec4(VertexPosition, 1.0));
 	data_out.TexCoords = VertexUV ;  //Complete this

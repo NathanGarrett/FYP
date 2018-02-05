@@ -29,9 +29,11 @@ private:
 	glm::mat4 model = glm::mat4(1.0f); //Model matrix
 	void setMatrices(Camera camera); //Set the camera matrices
 	void compileAndLinkShader(); //Compile and link the shader
-	Shader m_DefaultShader;
-	Texture* m_defaultTexture;
-	Texture* m_defaultNormalMap;
+	
+	Shader m_ObjectShader;
+	Shader m_WireframeShader;
+	Shader m_ShadedWireframeShader;
+
 };
 
 

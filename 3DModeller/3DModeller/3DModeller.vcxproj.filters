@@ -79,19 +79,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\defaultShader.frag">
+    <None Include="res\ObjectShader.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\defaultShader.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\normalShader.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\normalShader.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\wireframeShader.geom">
+    <None Include="res\ObjectShader.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

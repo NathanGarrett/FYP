@@ -32,7 +32,7 @@ void Window::InitWindow()
 	// initialise a window and let GLFW know that it should target opengl version 4.3
 	glfwInit();
 	window = glfwCreateWindow(m_kiWidth, m_kiHeight, "3DModeller", nullptr, nullptr);
-
+	
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -90,7 +90,7 @@ void Window::Render()
 {
 	if (abkeys[GLFW_KEY_RIGHT_CONTROL] && abkeys[GLFW_KEY_C])
 	{
-		scene->GenModel("ogre.obj");
+		scene->GenModel("cube.obj");
 	}
 	scene->render(*camera);
 }

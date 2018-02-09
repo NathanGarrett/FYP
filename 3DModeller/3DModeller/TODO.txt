@@ -1,7 +1,7 @@
 Next 5 Steps:
 1. Implement ADS shader for object model  DONE
-2. Implement shaded wireframe shader for vertex/line/face mode
-3. Update file loading system/ Implement Assimp
+2. Implement shaded wireframe shader for vertex/line/face mode KINDA DONE
+3. Update file loading system/ Implement Assimp OPTIONAL
 4. Get clicker working in object mode (an object slecetd in object mode will be pink)
 5. Get clicker working for vertex/line/face mode
 DEADLINE: Thursday 8th

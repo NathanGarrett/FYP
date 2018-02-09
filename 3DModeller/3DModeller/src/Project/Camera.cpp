@@ -25,8 +25,10 @@ glm::mat4 Camera::GetViewMatrix()
 
 glm::mat4 Camera::GetProjectionMatrix()
 {
+	
 	return glm::perspectiveFov(fZoom, 10.f, 10.f, 1.f, 100.f);
 }
+
 
 void Camera::updateCameraVectors()
 {

@@ -1,9 +1,7 @@
 #pragma once
-#include <Project/vbomesh.h>
+#include <Project/Model.h>
 #include <Project/Camera.h>
 #include <Project/Shader.h>
-#include <Project/Bitmap.h>
-#include <Project/Texture.h>
 #include <GLM/glm.hpp>
 #include <GLFW/glfw3.h>
 
@@ -23,7 +21,7 @@ public:
 	void GenModel(std::string model);
 	
 private:
-	std::vector<VBOMesh*> m_Objects;
+	std::vector<Model*> m_Objects;
 	
 	int width, height;
 	glm::mat4 model = glm::mat4(1.0f); //Model matrix

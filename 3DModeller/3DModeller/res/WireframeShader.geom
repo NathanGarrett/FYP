@@ -17,9 +17,9 @@ uniform mat4 ViewPortMatrix;
 void main()
 {
 	//transform each matrix into vp space
-	vec3 p0 = vec3(ViewPortMatrix * (gl_in[0].gl_Position / gl_in[0].gl_Position.w));
-	vec3 p1 = vec3(ViewPortMatrix * (gl_in[1].gl_Position / gl_in[1].gl_Position.w));
-	vec3 p2 = vec3(ViewPortMatrix * (gl_in[2].gl_Position / gl_in[2].gl_Position.w));
+	vec3 p0 = vec3( (gl_in[0].gl_Position / gl_in[0].gl_Position.w));
+	vec3 p1 = vec3( (gl_in[1].gl_Position / gl_in[1].gl_Position.w));
+	vec3 p2 = vec3( (gl_in[2].gl_Position / gl_in[2].gl_Position.w));
 	//find ha, hb and hc
 	float a = length(p1-p2);
 	float b = length(p2-p0);

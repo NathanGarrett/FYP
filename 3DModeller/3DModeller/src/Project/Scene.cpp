@@ -33,14 +33,14 @@ void Scene::render(Camera camera)
 	m_ObjectShader.setUniform("Kd", glm::vec3(0.0,0.0,0.0));
 	m_ObjectShader.setUniform("Ks", glm::vec3(0.0,0.0,0.0));
 	//Line Info
-	m_ObjectShader.setUniform("Line.Width", 0.1f);
+	m_ObjectShader.setUniform("Line.Width", 0.001f);
 	m_ObjectShader.setUniform("Line.Color", glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	for (int i = 0; i < m_Objects.size(); i++)
 	{
 		setMatrices(camera);
 		
-		m_Objects[i]->render();
+		m_Objects[i]->render(m_ObjectShader.getHandle());
 		
 	}
 	
@@ -80,6 +80,6 @@ void Scene::compileAndLinkShader()
 
 void Scene::GenModel(std::string model)
 {
-	VBOMesh* temp = new VBOMesh(("models/" + model).c_str(), false, false, false);
+	Model* temp = new Model(("models/" + model).c_str());
 	m_Objects.push_back(temp);
 }

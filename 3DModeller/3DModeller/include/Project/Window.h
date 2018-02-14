@@ -32,7 +32,8 @@ public:
 	
 	glm::vec3 getRay();
 	void onCLick();
-
+	void ObjectPicker(glm::vec3 rayHit);
+	void FacePicker(glm::vec3 rayHit);
 
 private:
 	GLFWwindow* window;

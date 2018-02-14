@@ -11,18 +11,18 @@ out vec3 lightPos; //Light position in eye coords
 
 uniform vec3 LightPosition; // Light position 
 uniform mat3 NormalMatrix;
-uniform mat4 M;
-uniform mat4 V;
-uniform mat4 P;
+uniform mat4 Model;
+uniform mat4 View;
+uniform mat4 Projection;
 
 void main()
 {
 
-   vertPos = vec3(V * M * vec4(VertexPosition,1.0)); 
+   vertPos = vec3(View * Model * vec4(VertexPosition,1.0)); 
      
-   lightPos = vec3(V * M * vec4(LightPosition,1.0));  
+   lightPos = vec3(View * Model * vec4(LightPosition,1.0));  
 
    N = normalize( NormalMatrix * VertexNormal);
       
-   gl_Position = gl_Position = P * V * M * vec4(VertexPosition,1.0);
+   gl_Position = gl_Position = Projection * View * Model * vec4(VertexPosition,1.0);
 }

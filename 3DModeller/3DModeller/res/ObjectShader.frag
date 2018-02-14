@@ -3,7 +3,7 @@
 in vec3 vertPos;
 in vec3 N;
 in vec3 lightPos;
-uniform int QuantLevels;
+//uniform int QuantLevels;
 //Ambient light Components
 uniform vec3 Ka;
 uniform vec3 La;         

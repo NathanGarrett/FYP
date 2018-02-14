@@ -81,16 +81,26 @@ void Window::Update()
 		Render();
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
-		getRay();
+		//onCLick();
 		
 	}
 }
 
 void Window::Render()
 {
+	if (abkeys[GLFW_KEY_L])
+	{
+		cout << scene->m_Objects[0]->getComponent<TransformComponent>()->m_position.y<< endl;
+		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(glm::vec3(0, 1, 0));
+	}
+	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_LEFT_SHIFT])
+	{
+		scene->CycleModes();
+		//cout << scene->GetMode() << endl;
+	}
 	if (abkeys[GLFW_KEY_RIGHT_CONTROL] && abkeys[GLFW_KEY_C])
 	{
-		scene->GenModel("ogre.obj");
+		scene->GenModel("cube.obj");
 	}
 	scene->render(*camera);
 }
@@ -145,7 +155,7 @@ void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mod
 		camera->ResetCamera();
 	}
 
-	
+
 }
 void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
 {	
@@ -232,8 +242,29 @@ glm::vec3 Window::getRay()
 
 void Window::onCLick()
 {
+	if (abkeys[GLFW_MOUSE_BUTTON_1])
+	{
+		if (scene->GetMode() == 0)
+		{
+			ObjectPicker(getRay());
+		}
+	}
 }
 
+void Window::ObjectPicker(glm::vec3 rayHit)
+{
+	//Make bounding sphere
+	//glm::vec3 bsCentre = glm::vec3(scene->m_Objects[0]->)
+	//sheck points along sphere and points along ray
+	//if 
+	
+	
+
+}
+void Window::FacePicker(glm::vec3 rayHit)
+{
+
+}
 #pragma endregion
 
 

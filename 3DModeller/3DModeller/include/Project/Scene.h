@@ -1,5 +1,7 @@
 #pragma once
-#include <Project/Model.h>
+#include <Project/ModelComponent.h>
+#include <Project/TransformComponent.h>
+#include <Project/SceneObject.h>
 #include <Project/Camera.h>
 #include <Project/Shader.h>
 #include <GLM/glm.hpp>
@@ -19,19 +21,25 @@ public:
 	void render(Camera camera);	//Render the scene
 
 	void GenModel(std::string model);
+
+	int GetMode() { return m_RenderMode; }
+	void CycleModes();
+
+	std::vector<SceneObject*> m_Objects;
 	
 private:
-	std::vector<Model*> m_Objects;
 	
+	int m_RenderMode = 0;
 	int width, height;
 	glm::mat4 model = glm::mat4(1.0f); //Model matrix
 	void setMatrices(Camera camera); //Set the camera matrices
 	void compileAndLinkShader(); //Compile and link the shader
 	
-	Shader m_ObjectShader;
-	Shader m_WireframeShader;
-	Shader m_ShadedWireframeShader;
+	Shader Wire;
+	Shader Object;
+	vector<Shader*> m_shaders;
 
+	
 };
 
 

@@ -29,7 +29,7 @@ public:
 	
 private:
 	
-	int m_RenderMode = 0;
+	unsigned int m_RenderMode = 0;
 	int width, height;
 	glm::mat4 model = glm::mat4(1.0f); //Model matrix
 	void setMatrices(Camera camera); //Set the camera matrices

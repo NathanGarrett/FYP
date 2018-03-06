@@ -38,7 +38,7 @@ void Scene::render(Camera camera)
 
 	
 	
-	for (int i = 0; i < m_Objects.size(); i++)
+	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
 		setMatrices(camera);
 		m_Objects[i]->getComponent<TransformComponent>()->yaw(5.0);

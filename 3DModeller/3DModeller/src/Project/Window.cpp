@@ -69,7 +69,7 @@ void Window::Update()
 {
 	while (!glfwWindowShouldClose(window))
 	{
-		GLfloat currentFrame = glfwGetTime();
+		GLfloat currentFrame = static_cast<GLfloat>(glfwGetTime());
 		fDeltaTime = currentFrame - lastframe;
 		lastframe = currentFrame;
 		
@@ -160,29 +160,32 @@ void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mod
 void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
 {	
 		
-		camera->ScrollProc(yOffset);
+		camera->ScrollProc(static_cast<GLfloat>(yOffset));
 }
 
 void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 {
+	GLfloat	fxPos = static_cast<GLfloat>(xPos);
+	GLfloat	fyPos = static_cast<GLfloat>(yPos);
+
 	if (abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
 		
 		if (bFirstMouse)
 		{
-			flastX = xPos;
-			flastY = yPos;
+			flastX = fxPos;
+			flastY = fyPos;
 			bFirstMouse = false;
 		}
-		GLfloat xOffset = xPos - flastX;
-		GLfloat yOffset = flastY - yPos;
+		GLfloat xOffset = fxPos - flastX;
+		GLfloat yOffset = flastY - fyPos;
 
 		
 
 		camera->MouseProc(xOffset, yOffset);
 	}
-	flastX = xPos;
-	flastY = yPos;
+	flastX = fxPos;
+	flastY = fyPos;
 	
 }
 

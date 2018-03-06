@@ -30,14 +30,14 @@ void Model::loadModel(string filepath)
 void Model::processNode(aiNode* node, const aiScene* scene)
 {
 	// get the meshes of the node and add them to our vector
-	for (int i = 0; i < node->mNumMeshes; i++)
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{ 
 		int sceneMeshIndex = node->mMeshes[i];
 		aiMesh* mesh = scene->mMeshes[sceneMeshIndex];
 		v_meshes.push_back(processMesh(mesh, scene));
 	}
 	// recursively process the nodes of any children
-	for (int i = 0; i < node->mNumChildren; i++)
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		processNode(node->mChildren[i], scene);
 	}
@@ -74,10 +74,10 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	}
 	
 	// save all the vertex indices in the indices vector
-	for (int i = 0; i < mesh->mNumFaces; i++)
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		// retrieve all indices of the face and store them in the indices vector
-		for (int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
+		for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
 			indices[3*i + j] = mesh->mFaces[i].mIndices[j];
 	}
 
@@ -112,7 +112,7 @@ void Model::render(const unsigned int shaderProgram)
 vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
 	vector<Texture> textures;
-	for (int i = 0; i < mat->GetTextureCount(type); i++)
+	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);

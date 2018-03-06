@@ -96,7 +96,6 @@ void Window::Render()
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
 		scene->CycleModes();
-		//cout << scene->GetMode() << endl;
 	}
 	if (abkeys[GLFW_KEY_RIGHT_CONTROL] && abkeys[GLFW_KEY_C])
 	{

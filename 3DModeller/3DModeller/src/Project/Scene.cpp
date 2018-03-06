@@ -11,7 +11,7 @@ void Scene::initScene(Camera camera)
 {
 	m_shaders.reserve(2);
 	compileAndLinkShader();
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Scene::update(float t)
@@ -32,24 +32,23 @@ void Scene::render(Camera camera)
 	m_shaders[m_RenderMode]->setUniform("Kd", glm::vec3(1.0, 0.5, 0.0));
 	m_shaders[m_RenderMode]->setUniform("Ks", glm::vec3(1.0, 0.5, 0.0));
 	//Line Info	
-
-		m_shaders[m_RenderMode]->setUniform("Line.Width", 0.001f);
-		m_shaders[m_RenderMode]->setUniform("Line.Color", glm::vec4(1.0, 1.0, 1.0, 1.0));
+	m_shaders[m_RenderMode]->setUniform("Line.Width", 0.0001f);
+	m_shaders[m_RenderMode]->setUniform("Line.Color", glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	
 	
 	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
-		setMatrices(camera);
-		m_Objects[i]->getComponent<TransformComponent>()->yaw(5.0);
+		setMatrices(camera, i); //update shaders with new camera and model matrices for each object i
 		m_Objects[i]->getComponent<ModelComponent>()->getModel().render(m_shaders[m_RenderMode]->getHandle());
 	}
 }
 
 
 
-void Scene::setMatrices(Camera camera)
+void Scene::setMatrices(Camera camera, unsigned int i)
 {
+	glm::mat4 model = m_Objects[i]->getComponent<TransformComponent>()->getModelMatrix();
 	glm::mat4 View = camera.GetViewMatrix();
 	glm::mat4 Projection = camera.GetProjectionMatrix();
 	glm::mat4 ModelView = camera.GetViewMatrix() * model;
@@ -90,11 +89,9 @@ void Scene::GenModel(std::string model)
 	tempSO->addComponent(new ModelComponent(temp));
 	tempSO->addComponent(new TransformComponent(glm::vec3(0, 0, 0), glm::quat(0, 0, 0, 0), glm::vec3(1, 1, 1)));
 	m_Objects.push_back(tempSO);
-	//temp = nullptr;
-	//tempSO = nullptr;
-	//delete temp;
-	//delete tempSO;
+
 }
+
 
 void Scene::CycleModes()
 {

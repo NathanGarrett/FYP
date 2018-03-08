@@ -1,12 +1,13 @@
 #pragma once
-//GLAD
+
 #include <GLAD\glad.h>
-//GLFW
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
+#include <nanogui\nanogui.h>
 //other includes 
 #include <iostream>
 #include <Project/Camera.h>
 #include <Project/Scene.h>
+
 
 
 #pragma region Inputs
@@ -22,6 +23,7 @@ public:
 	Window();
 	~Window();
 	void InitWindow();
+	void InitUI();
 	void Update();
 	void Render();
 	Scene* scene;
@@ -37,5 +39,7 @@ public:
 
 private:
 	GLFWwindow* window;
+	nanogui::Screen* screen = nullptr;
 	const GLuint m_kiWidth = 1280, m_kiHeight = 720;
+
 };

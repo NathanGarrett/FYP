@@ -27,11 +27,10 @@ Window::~Window()
 void Window::InitWindow()
 {
 
-	
-
 	// initialise a window and let GLFW know that it should target opengl version 4.3
 	glfwInit();
 	window = glfwCreateWindow(m_kiWidth, m_kiHeight, "3DModeller", nullptr, nullptr);
+	
 	
 	if (window == nullptr)
 	{
@@ -57,12 +56,36 @@ void Window::InitWindow()
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
+	
+
 	scene = new Scene();
 	scene->initScene(*camera);
-
-
+	//screen = new nanogui::Screen();
+	//screen->initialize(window, true);
 	
-	
+	//InitUI();
+}
+
+void Window::InitUI()
+{
+	nanogui::FormHelper *gui = new nanogui::FormHelper(screen);
+	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Transform");
+	gui->addGroup("Scale");
+	gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x);
+	gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y);
+	gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z);
+	gui->addGroup("Position");
+	gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x);
+	gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y);
+	gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z);
+	gui->addGroup("Rotation");
+	gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x);
+	gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y);
+	gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z);
+
+	screen->setVisible(true);
+	screen->performLayout();
+	nanoguiWindow->center();
 }
 
 void Window::Update()
@@ -75,6 +98,8 @@ void Window::Update()
 		
 		glClearColor(0.5f, 0.5f, 0.5f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		/*screen->drawContents();
+		screen->drawWidgets();*/
 		DoMovement();
 		glfwWaitEvents();
 		
@@ -88,10 +113,13 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (abkeys[GLFW_KEY_L])
+	if (abkeys[GLFW_KEY_W])
 	{
-		cout << scene->m_Objects[0]->getComponent<TransformComponent>()->m_position.y<< endl;
-		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(glm::vec3(0, 1, 0));
+		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(0.0,1.0,0.0);
+	}
+	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
+	{
+		scene->CycleFoci();
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
@@ -161,7 +189,6 @@ void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
 		
 		camera->ScrollProc(static_cast<GLfloat>(yOffset));
 }
-
 void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 {
 	GLfloat	fxPos = static_cast<GLfloat>(xPos);
@@ -187,7 +214,6 @@ void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 	flastY = fyPos;
 	
 }
-
 void DoMovement()
 {
 	if (abkeys[GLFW_KEY_LEFT_SHIFT])

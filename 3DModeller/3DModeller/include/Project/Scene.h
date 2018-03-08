@@ -25,11 +25,15 @@ public:
 	int GetMode() { return m_RenderMode; }
 	void CycleModes();
 
+	int GetFocus() { return m_Focus; }
+	void CycleFoci();
+
 	std::vector<SceneObject*> m_Objects;
 	
 private:
 	
 	unsigned int m_RenderMode = 0;
+	unsigned int m_Focus = 0;
 	int width, height;
 	void setMatrices(Camera camera, unsigned int i); //Set the camera matrices
 	void compileAndLinkShader(); //Compile and link the shader

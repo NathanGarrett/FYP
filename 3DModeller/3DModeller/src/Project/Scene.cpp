@@ -27,10 +27,7 @@ void Scene::render(Camera camera)
 	m_shaders[m_RenderMode]->setUniform("La", glm::vec3(1.0, 1.0, 1.0));
 	m_shaders[m_RenderMode]->setUniform("Ld", glm::vec3(1.0, 1.0, 1.0));
 	m_shaders[m_RenderMode]->setUniform("Ls", glm::vec3(1.0, 1.0, 1.0));
-	//Object shader material uniforms
-	m_shaders[m_RenderMode]->setUniform("Ka", glm::vec3(1.0, 0.5, 0.0));
-	m_shaders[m_RenderMode]->setUniform("Kd", glm::vec3(1.0, 0.5, 0.0));
-	m_shaders[m_RenderMode]->setUniform("Ks", glm::vec3(1.0, 0.5, 0.0));
+	
 	//Line Info	
 	m_shaders[m_RenderMode]->setUniform("Line.Width", 0.0001f);
 	m_shaders[m_RenderMode]->setUniform("Line.Color", glm::vec4(1.0, 1.0, 1.0, 1.0));
@@ -39,6 +36,22 @@ void Scene::render(Camera camera)
 	
 	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
+		
+		if (i == m_Focus)
+		{
+			//Object shader material uniforms
+			m_shaders[m_RenderMode]->setUniform("Ka", glm::vec3(1.0, 0.0, 0.0));
+			m_shaders[m_RenderMode]->setUniform("Kd", glm::vec3(1.0, 0.0, 0.0));
+			m_shaders[m_RenderMode]->setUniform("Ks", glm::vec3(1.0, 0.0, 0.0));
+		}
+		else 
+		{
+			//Object shader material uniforms
+			m_shaders[m_RenderMode]->setUniform("Ka", glm::vec3(1.0, 0.5, 0.0));
+			m_shaders[m_RenderMode]->setUniform("Kd", glm::vec3(1.0, 0.5, 0.0));
+			m_shaders[m_RenderMode]->setUniform("Ks", glm::vec3(1.0, 0.5, 0.0));
+
+		}
 		setMatrices(camera, i); //update shaders with new camera and model matrices for each object i
 		m_Objects[i]->getComponent<ModelComponent>()->getModel().render(m_shaders[m_RenderMode]->getHandle());
 	}
@@ -102,5 +115,17 @@ void Scene::CycleModes()
 	else if (m_RenderMode == m_shaders.size()-1)
 	{
 		m_RenderMode = 0;
+	}
+}
+
+void Scene::CycleFoci()
+{
+	if (m_Focus < m_Objects.size() - 1)
+	{
+		m_Focus++;
+	}
+	else if (m_Focus == m_Objects.size() - 1)
+	{
+		m_Focus = 0;
 	}
 }

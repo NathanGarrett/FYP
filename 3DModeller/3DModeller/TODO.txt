@@ -1,8 +1,7 @@
-Next Steps:
-1. Swap shaders with a click
-2. Implement clicker for rendermode 0 (object mode)
-3. Implement clicker for rendermode 1 (face mode)
-
+Next 3 Steps:
+1. spawn multiple models and cycle between them with tab i.e an object selected unsigned int
+2. make nanogui work
+3.
 Goal for next meeting the 1st march
 4 basic functions (select scale rotate and translate)
 UI implementation

@@ -180,7 +180,8 @@ public:
 
     /// Add a new data widget that exposes a raw variable in memory
     template <typename Type> detail::FormWidget<Type> *
-    addVariable(const std::string &label, Type &value, bool editable = true) {
+    addVariable(const std::string &label, Type &value, bool editable = true)
+	{
         return addVariable<Type>(label,
             [&](const Type & v) { value = v; },
             [&]() -> Type { return value; },

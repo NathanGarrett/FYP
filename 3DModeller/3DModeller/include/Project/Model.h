@@ -16,7 +16,7 @@ public:
 
 	static unsigned int TextureFromFile(const char* filepath, const string& directory, bool gamma = false);
 	static unsigned int TextureFromFile(const char* filepath, bool gamma = false);
-
+	std::vector<Mesh> getMesh() { return v_meshes; }
 	size_t getMeshCount() { return v_meshes.size(); }
 private:
 	std::vector<Mesh> v_meshes;

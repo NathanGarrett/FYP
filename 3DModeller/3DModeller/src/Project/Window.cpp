@@ -10,6 +10,8 @@ GLfloat lastframe = 0.0f;
 bool abkeys[1024];
 bool bFirstMouse = true;
 
+nanogui::Screen* screen = nullptr;
+
 Window::Window()
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -40,10 +42,84 @@ void Window::InitWindow()
 
 	// make this new window our current context, THEN try to initialise GLAD function ptrs
 	glfwMakeContextCurrent(window);
-	//set callbacks
-	glfwSetKeyCallback(window, KeyCallBack);
-	glfwSetCursorPosCallback(window, MouseCallBack);
-	glfwSetScrollCallback(window, ScrollCallBack);
+
+
+
+#pragma region nanoCallBacks
+	glfwSetCursorPosCallback(window,[](GLFWwindow *, double x, double y)
+	{
+		screen->cursorPosCallbackEvent(x, y);
+		GLfloat	fxPos = static_cast<GLfloat>(x);
+		GLfloat	fyPos = static_cast<GLfloat>(y);
+
+		if (abkeys[GLFW_KEY_LEFT_SHIFT])
+		{
+
+			if (bFirstMouse)
+			{
+				flastX = fxPos;
+				flastY = fyPos;
+				bFirstMouse = false;
+			}
+			GLfloat xOffset = fxPos - flastX;
+			GLfloat yOffset = flastY - fyPos;
+
+
+
+			camera->MouseProc(xOffset, yOffset);
+		}
+		flastX = fxPos;
+		flastY = fyPos;
+
+	}
+	);
+
+	glfwSetMouseButtonCallback(window,[](GLFWwindow *, int button, int action, int modifiers) 
+	{
+		screen->mouseButtonCallbackEvent(button, action, modifiers);
+	}
+	);
+
+	glfwSetKeyCallback(window,[](GLFWwindow *, int key, int scancode, int action, int mods) 
+	{
+		screen->keyCallbackEvent(key, scancode, action, mods);
+		if (key >= 0 && key <= 1024)
+		{
+			if (action == GLFW_PRESS)
+			{
+				abkeys[key] = true;
+			}
+
+			else if (action == GLFW_RELEASE)
+			{
+				abkeys[key] = false;
+			}
+		}
+	}
+	);
+
+	glfwSetCharCallback(window,[](GLFWwindow *, unsigned int codepoint) 
+	{
+		screen->charCallbackEvent(codepoint);
+	}
+	);
+
+	glfwSetDropCallback(window,[](GLFWwindow *, int count, const char **filenames)
+	{
+		screen->dropCallbackEvent(count, filenames);
+	});
+
+	glfwSetScrollCallback(window,[](GLFWwindow *, double x, double y) 
+	{
+		screen->scrollCallbackEvent(x, y);
+	});
+
+	glfwSetFramebufferSizeCallback(window,[](GLFWwindow *, int width, int height) 
+	{
+		screen->resizeCallbackEvent(width, height);
+	});
+#pragma endregion
+	
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	//Glad init
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -60,32 +136,41 @@ void Window::InitWindow()
 
 	scene = new Scene();
 	scene->initScene(*camera);
-	//screen = new nanogui::Screen();
-	//screen->initialize(window, true);
 	
-	//InitUI();
+	screen = new nanogui::Screen();
+	screen->initialize(window, true);
+	
+	gui = new nanogui::FormHelper(screen);
+	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Transform");
+
 }
 
 void Window::InitUI()
 {
-	nanogui::FormHelper *gui = new nanogui::FormHelper(screen);
-	nanogui::ref<nanogui::Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Transform");
-	gui->addGroup("Scale");
-	gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x);
-	gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y);
-	gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z);
-	gui->addGroup("Position");
-	gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x);
-	gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y);
-	gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z);
-	gui->addGroup("Rotation");
-	gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x);
-	gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y);
-	gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z);
+	
+	if (!m_bGUIActive)
+	{
+		gui->addGroup("Scale");
+		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x)->setSpinnable(true);
+		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y)->setSpinnable(true);
+		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z)->setSpinnable(true);
+		gui->addGroup("Position");
+		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x)->setSpinnable(true);
+		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y)->setSpinnable(true);
+		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z)->setSpinnable(true);
+		gui->addGroup("Rotation");
+		gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x)->setSpinnable(true);
+		gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y)->setSpinnable(true);
+		gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z)->setSpinnable(true);
+		screen->setVisible(true);
+		screen->performLayout();
+		nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
+		m_bGUIActive = true;
 
-	screen->setVisible(true);
-	screen->performLayout();
-	nanoguiWindow->center();
+	}
+	screen->updateFocus(nanoguiWindow);
+	gui->refresh();
+	
 }
 
 void Window::Update()
@@ -97,13 +182,20 @@ void Window::Update()
 		lastframe = currentFrame;
 		
 		glClearColor(0.5f, 0.5f, 0.5f, 0.f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		/*screen->drawContents();
-		screen->drawWidgets();*/
-		DoMovement();
-		glfwWaitEvents();
 		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				
+		glfwWaitEvents();
+
+		DoMovement();
+				glDisable(GL_DEPTH_TEST);
+
+		screen->drawContents();
+		screen->drawWidgets();
+
+		glEnable(GL_DEPTH_TEST);
 		Render();
+
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
 		//onCLick();
@@ -113,13 +205,16 @@ void Window::Update()
 
 void Window::Render()
 {
+	if (scene->m_Objects.size() < 1) { scene->GenModel("shape.obj"); }
 	if (abkeys[GLFW_KEY_W])
 	{
-		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(0.0,1.0,0.0);
+		std::cout << "w key" << std::endl;
+		scene->m_Objects[0]->getComponent<TransformComponent>()->mirrorGeometryYZ();
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
 	{
 		scene->CycleFoci();
+		std::cout << scene->GetFocus() << std::endl;
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_LEFT_SHIFT])
 	{
@@ -129,6 +224,7 @@ void Window::Render()
 	{
 		scene->GenModel("cube.obj");
 	}
+	InitUI();
 	scene->render(*camera);
 }
 #pragma region Getters
@@ -158,7 +254,7 @@ GLuint Window::GetHeight()
 void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mode)
 {
 	
-	
+	//screen->keyCallbackEvent(key, scancode, action, mode);
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -188,6 +284,7 @@ void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
 {	
 		
 		camera->ScrollProc(static_cast<GLfloat>(yOffset));
+		//screen->scrollCallbackEvent(xOffset, yOffset);
 }
 void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 {
@@ -214,6 +311,7 @@ void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
 	flastY = fyPos;
 	
 }
+
 void DoMovement()
 {
 	if (abkeys[GLFW_KEY_LEFT_SHIFT])

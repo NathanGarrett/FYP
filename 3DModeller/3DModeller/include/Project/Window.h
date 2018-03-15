@@ -27,6 +27,7 @@ public:
 	void Update();
 	void Render();
 	Scene* scene;
+	
 	GLFWwindow* GetWindow();
 	GLuint GetHeight();
 	GLuint GetWidth();
@@ -38,8 +39,11 @@ public:
 	void FacePicker(glm::vec3 rayHit);
 
 private:
+	
+	nanogui::FormHelper *gui;
+	nanogui::ref<nanogui::Window> nanoguiWindow;
+	bool m_bGUIActive = false;
 	GLFWwindow* window;
-	nanogui::Screen* screen = nullptr;
 	const GLuint m_kiWidth = 1280, m_kiHeight = 720;
 
 };

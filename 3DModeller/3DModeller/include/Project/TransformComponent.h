@@ -21,10 +21,16 @@ public:
 	{
 
 	}
-	TransformComponent() : m_position(0), m_orientation(1, 0, 0, 0), m_scale(1.0f) {}
-	TransformComponent(const glm::vec3& pos) : m_position(pos), m_orientation(1, 0, 0, 0), m_scale(1.0f) {}
-	TransformComponent(const glm::vec3& pos, const glm::quat& orient) : m_position(pos), m_orientation(orient), m_scale(1.0f) {}
-	TransformComponent(const glm::vec3& pos, const glm::quat& orient, const glm::vec3& scale) : m_position(pos), m_orientation(orient), m_scale(scale) {}
+	TransformComponent() : m_position(0), m_orientation(1, 0, 0, 0), m_scale(1.0f) 
+	{
+		setModelMatrix();
+	}
+	TransformComponent(const glm::vec3& pos) : m_position(pos), m_orientation(1, 0, 0, 0), m_scale(1.0f) 
+	{
+		setModelMatrix();
+	}
+	TransformComponent(const glm::vec3& pos, const glm::quat& orient) : m_position(pos), m_orientation(orient), m_scale(1.0f) { setModelMatrix(); }
+	TransformComponent(const glm::vec3& pos, const glm::quat& orient, const glm::vec3& scale) : m_position(pos), m_orientation(orient), m_scale(scale) { setModelMatrix(); }
 
 	const glm::vec3& position() const { return m_position; }
 	const glm::quat& orientation() const { return m_orientation; }
@@ -32,12 +38,16 @@ public:
 
 	glm::mat4 getModelMatrix()
 	{
+		
+		return modelMatrix;
+	}
+	void setModelMatrix() 
+	{
 		glm::mat4 transMatrix = glm::translate(glm::mat4(1.0f), m_position);
 		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), m_scale);
 		glm::mat4 rotMatrix = glm::mat4_cast(m_orientation);
-		return transMatrix * rotMatrix * scaleMatrix;
+		modelMatrix = transMatrix * rotMatrix * scaleMatrix;
 	}
-
 	void translate(const glm::vec3 &v) { m_position += v; }
 	void translate(float x, float y, float z) { m_position += glm::vec3(x, y, z); }
 
@@ -50,4 +60,31 @@ public:
 	void yaw(float angle) { rotate(angle, 0.0f, 1.0f, 0.0f); }
 	void pitch(float angle) { rotate(angle, 1.0f, 0.0f, 0.0f); }
 	void roll(float angle) { rotate(angle, 0.0f, 0.0f, 1.0f); }
+
+
+//mirror geometry
+	void mirrorGeometryXY() { modelMatrix = modelMatrix * reflectXY; }
+	void mirrorGeometryYZ() 
+	{
+		modelMatrix = modelMatrix * reflectYZ; 
+		
+	}
+	void mirrorGeometryZX() { modelMatrix = modelMatrix * reflectZX; }
+
+private:
+	glm::mat4 reflectXY = { 1, 0, 0, 0,
+							0, 1, 0, 0,
+							0, 0,-1, 0,
+							0, 0, 0, 1 };
+	
+	glm::mat4 reflectYZ = { -1, 0, 0, 0,
+							0, 1, 0, 0,
+							0, 0,-1, 0,
+							0, 0, 0, 1 };
+	
+	glm::mat4 reflectZX = { 1,  0, 0, 0,
+							0, -1, 0, 0,
+							0,  0,  1, 0,
+							0, 0, 0, 1 };
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
 };

@@ -1,7 +1,10 @@
-Next 3 Steps:
-1. spawn multiple models and cycle between them with tab i.e an object selected unsigned int
-2. make nanogui work
-3.
-Goal for next meeting the 1st march
-4 basic functions (select scale rotate and translate)
-UI implementation
+Today in FYP:
+1. Make nanogui work in 64 bit debug and release DONE
+2. Make it work so that the transform of models in the scene can be changed via the UI DONE
+3. fix callbacks
+3. Allow the user to scope to the Focus by pressing F
+
+Goal for next meeting the 15th March: All the above and mirror tool, using the ogre as a test case.
+
+Other things to do today:
+More games programming

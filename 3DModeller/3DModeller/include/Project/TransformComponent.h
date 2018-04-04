@@ -63,28 +63,9 @@ public:
 
 
 //mirror geometry
-	void mirrorGeometryXY() { modelMatrix = modelMatrix * reflectXY; }
-	void mirrorGeometryYZ() 
-	{
-		modelMatrix = modelMatrix * reflectYZ; 
-		
-	}
-	void mirrorGeometryZX() { modelMatrix = modelMatrix * reflectZX; }
+
 
 private:
-	glm::mat4 reflectXY = { 1, 0, 0, 0,
-							0, 1, 0, 0,
-							0, 0,-1, 0,
-							0, 0, 0, 1 };
-	
-	glm::mat4 reflectYZ = { -1, 0, 0, 0,
-							0, 1, 0, 0,
-							0, 0,-1, 0,
-							0, 0, 0, 1 };
-	
-	glm::mat4 reflectZX = { 1,  0, 0, 0,
-							0, -1, 0, 0,
-							0,  0,  1, 0,
-							0, 0, 0, 1 };
+
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
 };

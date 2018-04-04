@@ -7,6 +7,7 @@
 #include <iostream>
 #include <Project/Camera.h>
 #include <Project/Scene.h>
+#include <Project\Command.h>
 
 
 
@@ -39,7 +40,7 @@ public:
 	void FacePicker(glm::vec3 rayHit);
 
 private:
-	
+	Command command;
 	nanogui::FormHelper *gui;
 	nanogui::ref<nanogui::Window> nanoguiWindow;
 	bool m_bGUIActive = false;

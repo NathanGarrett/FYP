@@ -151,24 +151,25 @@ void Window::InitUI()
 	if (!m_bGUIActive)
 	{
 		gui->addGroup("Scale");
-		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x)->setSpinnable(true);
-		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y)->setSpinnable(true);
-		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z)->setSpinnable(true);
+		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x, true);
+		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y,true);
+		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z,true);
 		gui->addGroup("Position");
-		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x)->setSpinnable(true);
-		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y)->setSpinnable(true);
-		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z)->setSpinnable(true);
+		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x,true);
+		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y,true);
+		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z,true);
 		gui->addGroup("Rotation");
-		gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x)->setSpinnable(true);
-		gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y)->setSpinnable(true);
-		gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z)->setSpinnable(true);
-		screen->setVisible(true);
-		screen->performLayout();
-		nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
+		gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x,true);
+		gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y,true);
+		gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z,true);
+		
 		m_bGUIActive = true;
-
+		screen->updateFocus(nanoguiWindow);
 	}
-	screen->updateFocus(nanoguiWindow);
+	screen->setVisible(true);
+	screen->performLayout();
+	nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
+	
 	gui->refresh();
 	
 }
@@ -188,11 +189,11 @@ void Window::Update()
 		glfwWaitEvents();
 
 		DoMovement();
-				glDisable(GL_DEPTH_TEST);
+		glDisable(GL_DEPTH_TEST);
 
-		screen->drawContents();
+		
 		screen->drawWidgets();
-
+		screen->drawContents();
 		glEnable(GL_DEPTH_TEST);
 		Render();
 
@@ -206,10 +207,12 @@ void Window::Update()
 void Window::Render()
 {
 	if (scene->m_Objects.size() < 1) { scene->GenModel("shape.obj"); }
-	if (abkeys[GLFW_KEY_W])
+	if (abkeys[GLFW_KEY_M])
 	{
-		std::cout << "w key" << std::endl;
-		scene->m_Objects[0]->getComponent<TransformComponent>()->mirrorGeometryYZ();
+		std::cout << "M key" << std::endl;
+		//command.MirrorGeometryYZ(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 7);
+		//command.MirrorGeometryZX(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(),1);
+		command.MirrorGeometryXY(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 2.5);
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
 	{

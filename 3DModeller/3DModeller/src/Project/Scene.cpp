@@ -130,3 +130,8 @@ void Scene::CycleFoci()
 		m_Focus = 0;
 	}
 }
+
+void Scene::SetFocus(int focus)
+{
+	m_Focus = focus;
+}

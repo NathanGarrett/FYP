@@ -6,7 +6,7 @@ GLfloat flastY = 720 / 2.0f;
 
 GLfloat fDeltaTime = 0.0f;
 GLfloat lastframe = 0.0f;
-
+bool isClick = false;
 bool abkeys[1024];
 bool bFirstMouse = true;
 
@@ -32,14 +32,12 @@ void Window::InitWindow()
 	// initialise a window and let GLFW know that it should target opengl version 4.3
 	glfwInit();
 	window = glfwCreateWindow(m_kiWidth, m_kiHeight, "3DModeller", nullptr, nullptr);
-	
-	
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
-
+	
 	// make this new window our current context, THEN try to initialise GLAD function ptrs
 	glfwMakeContextCurrent(window);
 
@@ -73,10 +71,15 @@ void Window::InitWindow()
 
 	}
 	);
-
+	
 	glfwSetMouseButtonCallback(window,[](GLFWwindow *, int button, int action, int modifiers) 
 	{
 		screen->mouseButtonCallbackEvent(button, action, modifiers);
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		{
+			isClick = true;
+		}
+			
 	}
 	);
 
@@ -112,6 +115,7 @@ void Window::InitWindow()
 	glfwSetScrollCallback(window,[](GLFWwindow *, double x, double y) 
 	{
 		screen->scrollCallbackEvent(x, y);
+		//camera->ScrollProc(static_cast<GLfloat>(static_cast<GLfloat>(y)));
 	});
 
 	glfwSetFramebufferSizeCallback(window,[](GLFWwindow *, int width, int height) 
@@ -187,7 +191,7 @@ void Window::Update()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				
 		glfwWaitEvents();
-
+		onCLick();
 		DoMovement();
 		glDisable(GL_DEPTH_TEST);
 
@@ -199,7 +203,8 @@ void Window::Update()
 
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
-		//onCLick();
+		
+		onCLick();
 		
 	}
 }
@@ -254,66 +259,66 @@ GLuint Window::GetHeight()
 
 #pragma region Input
 
-void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mode)
-{
-	
-	//screen->keyCallbackEvent(key, scancode, action, mode);
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-
-	if (key >= 0 && key <= 1024)
-	{
-		if (action == GLFW_PRESS)
-		{
-			abkeys[key] = true;
-		}
-
-		else if (action == GLFW_RELEASE)
-		{
-			abkeys[key] = false;
-		}
-	}
-
-	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_R])
-	{
-		camera->ResetCamera();
-	}
-
-
-}
-void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
-{	
-		
-		camera->ScrollProc(static_cast<GLfloat>(yOffset));
-		//screen->scrollCallbackEvent(xOffset, yOffset);
-}
-void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
-{
-	GLfloat	fxPos = static_cast<GLfloat>(xPos);
-	GLfloat	fyPos = static_cast<GLfloat>(yPos);
-
-	if (abkeys[GLFW_KEY_LEFT_SHIFT])
-	{
-		
-		if (bFirstMouse)
-		{
-			flastX = fxPos;
-			flastY = fyPos;
-			bFirstMouse = false;
-		}
-		GLfloat xOffset = fxPos - flastX;
-		GLfloat yOffset = flastY - fyPos;
-
-		
-
-		camera->MouseProc(xOffset, yOffset);
-	}
-	flastX = fxPos;
-	flastY = fyPos;
-	
-}
+//void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mode)
+//{
+//	
+//	//screen->keyCallbackEvent(key, scancode, action, mode);
+//	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+//	{
+//		glfwSetWindowShouldClose(window, GL_TRUE);
+//	}
+//
+//	if (key >= 0 && key <= 1024)
+//	{
+//		if (action == GLFW_PRESS)
+//		{
+//			abkeys[key] = true;
+//		}
+//
+//		else if (action == GLFW_RELEASE)
+//		{
+//			abkeys[key] = false;
+//		}
+//	}
+//
+//	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_R])
+//	{
+//		camera->ResetCamera();
+//	}
+//
+//
+//}
+//void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
+//{	
+//		
+//		camera->ScrollProc(static_cast<GLfloat>(yOffset));
+//		//screen->scrollCallbackEvent(xOffset, yOffset);
+//}
+//void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
+//{
+//	GLfloat	fxPos = static_cast<GLfloat>(xPos);
+//	GLfloat	fyPos = static_cast<GLfloat>(yPos);
+//
+//	if (abkeys[GLFW_KEY_LEFT_SHIFT])
+//	{
+//		
+//		if (bFirstMouse)
+//		{
+//			flastX = fxPos;
+//			flastY = fyPos;
+//			bFirstMouse = false;
+//		}
+//		GLfloat xOffset = fxPos - flastX;
+//		GLfloat yOffset = flastY - fyPos;
+//
+//		
+//
+//		camera->MouseProc(xOffset, yOffset);
+//	}
+//	flastX = fxPos;
+//	flastY = fyPos;
+//	
+//}
 
 void DoMovement()
 {
@@ -364,37 +369,56 @@ glm::vec3 Window::getRay()
 	ray_world.x = (glm::inverse(camera->GetViewMatrix())* ray_eye).x;
 	ray_world.y = (glm::inverse(camera->GetViewMatrix())* ray_eye).y;
 	ray_world.z = (glm::inverse(camera->GetViewMatrix())* ray_eye).z;
-	glm::normalize(ray_world);
+	//glm::normalize(ray_world);
 	//std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
 	return ray_world;
 }
 
 void Window::onCLick()
 {
-	if (abkeys[GLFW_MOUSE_BUTTON_1])
+	if (isClick) 
 	{
-		if (scene->GetMode() == 0)
-		{
-			ObjectPicker(getRay());
-		}
+		Picker(getRay());
+		isClick = false;
 	}
+	else return;
 }
 
-void Window::ObjectPicker(glm::vec3 rayHit)
+
+
+
+
+void Window::Picker(glm::vec3 rayHit)
 {
-	//Make bounding sphere
-	//glm::vec3 bsCentre = glm::vec3(scene->m_Objects[0]->)
-	//sheck points along sphere and points along ray
-	//if 
-	
+	if (scene->GetMode() == 0)//object mode
+	{
+		std::cout << "Object Mode" << endl;
+		
+
+		for (int i = 0; i < scene->m_Objects.size(); i++)
+		{
+			float dist = 0;
+			glm::vec3 pos = scene->m_Objects[i]->getComponent<TransformComponent>()->m_position;
+			glm::vec3 vNorm = glm::normalize(pos);
+			glm::vec3 vDir = pos - rayHit;
+			dist = sqrt((pow(vDir.x, 2) + pow(vDir.y, 2) + pow(vDir.z, 2))); //normalised distance between obj and raypos
+			if (dist <= 1)
+			{
+				std::cout << "Hit" << endl;
+				scene->SetFocus(i);
+				return;
+			}
+		}
+		
+	}
+	else if (scene->GetMode() == 1)//face mode
+	{
+		//scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel().getMesh
+		//go through each face in the mesh, calculate the distance between ray hit and the mesh's centre, if the distance is less than the objects width, set it to be the focus.
+
+	}
 	
 
 }
-void Window::FacePicker(glm::vec3 rayHit)
-{
 
-}
 #pragma endregion
-
-
-

@@ -7,9 +7,9 @@ void Command::MirrorGeometryXY(Model * model, float zOffset)
 		std::vector<Vertex> newVerts;
 		std::vector<unsigned int> newIndices;
 		std::vector<Texture> newTextures;
-		float NewVertsSize = 0;
-		float NewIndicesSize = 0;
-		float NewTexturesSize = 0;
+		size_t NewVertsSize = 0;
+		size_t NewIndicesSize = 0;
+		size_t NewTexturesSize = 0;
 		//find total number of verts on the model
 		for (int i = 0; i < model->getMeshCount(); i++)
 		{

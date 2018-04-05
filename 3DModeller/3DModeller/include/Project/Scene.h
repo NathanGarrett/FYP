@@ -26,6 +26,7 @@ public:
 	void CycleModes();
 
 	int GetFocus() { return m_Focus; }
+	void SetFocus(int focus);
 	void CycleFoci();
 
 	std::vector<SceneObject*> m_Objects;

@@ -169,12 +169,15 @@ void Window::InitUI()
 		
 		m_bGUIActive = true;
 		screen->updateFocus(nanoguiWindow);
+		screen->setVisible(true);
+		nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
+		screen->performLayout();
 	}
-	screen->setVisible(true);
-	screen->performLayout();
-	nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
 	
-	gui->refresh();
+	
+	
+	
+	//gui->refresh();
 	
 }
 
@@ -211,13 +214,14 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (scene->m_Objects.size() < 1) { scene->GenModel("shape.obj"); }
+	if (scene->m_Objects.size() < 1) { scene->GenModel("cube.obj"); }
 	if (abkeys[GLFW_KEY_M])
 	{
 		std::cout << "M key" << std::endl;
 		//command.MirrorGeometryYZ(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 7);
 		//command.MirrorGeometryZX(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(),1);
-		command.MirrorGeometryXY(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 2.5);
+		//command.MirrorGeometryXY(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 2.5);
+		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(10, 0, 0);
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
 	{

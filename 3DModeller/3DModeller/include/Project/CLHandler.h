@@ -87,12 +87,12 @@ public:
 	};
 	glm::vec3 MAT_VEC_MULT(glm::vec3 Vector, glm::mat4 Mat) 
 	{
-		//float correct[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		float correct[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		//cast input variables into I-Values
 		vec[0] = Vector.x;
 		vec[1] = Vector.y;
 		vec[2] = Vector.z;
-		vec[3] = 0;
+		vec[3] = 1;
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -101,13 +101,13 @@ public:
 			}
 		}
 		//create correction vector
-	/*	for (i = 0; i<4; i++)
+		for (i = 0; i<4; i++)
 		{
 			correct[0] += mat[i] * vec[i];
 			correct[1] += mat[i + 4] * vec[i];
 			correct[2] += mat[i + 8] * vec[i];
 			correct[3] += mat[i + 12] * vec[i];
-		}*/
+		}
 		
 
 		/* Create kernel for the mat_vec_mult function */
@@ -163,17 +163,17 @@ public:
 		}
 
 		/* Test the result */
-	/*	if ((result[0] == correct[0]) && (result[1] == correct[1])
+		if ((result[0] == correct[0]) && (result[1] == correct[1])
 			&& (result[2] == correct[2]) && (result[3] == correct[3])) 
 		{
-			printf("Matrix-vector multiplication successful.\n");*/
+			printf("Matrix-vector multiplication successful.\n");
 			return glm::vec3(result[0], result[1], result[2]);
-		//}
-		//else 
-		//{
-		//	printf("Matrix-vector multiplication unsuccessful.\n");
-		//	return glm::vec3();
-		//}
+		}
+		else 
+		{
+			printf("Matrix-vector multiplication unsuccessful.\n");
+			return glm::vec3();
+		}
 		
 	};
 private:

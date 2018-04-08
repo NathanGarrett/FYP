@@ -109,3 +109,29 @@ void Command::MirrorGeometryZX(Model * model, float yOffset)
 
 	std::cout << "Mirror-XY Done, v_meshes size: " << model->getMeshCount() << std::endl;
 }
+
+void Command::ExtrudeFace(Model * model, glm::vec3 mag)
+{
+	//std::vector<Vertex> newVerts;
+	//newVerts.resize(3);
+
+	glm::mat4 Extrude =
+	{   1, 0, 0, mag.x,
+		0, 1, 0, mag.y,
+		0, 0, 1, mag.z,
+		0, 0, 0, 1 };
+	for (int i = 0; i < 6; i++)
+	{
+		glm::vec3    pos = model->getMesh()[0].vertices[i].position;
+		glm::vec3 newPos = handler.MAT_VEC_MULT(pos, Extrude);
+		model->getMesh()[0].vertices[i].position = newPos;
+		//newVerts[i].normal = model->getMesh()[0].vertices[i].normal;
+		//newVerts[i].textureCoords = model->getMesh()[0].vertices[i].textureCoords;
+	}
+	
+	//model->getMesh()[0].vertices[0].position = newPos;
+	//glm::vec3    finalpos = model->getMesh()[0].vertices[0].position;
+	
+	model->getMesh()[0].setupMesh();
+	//std::cout << "\n Extrude vert done, verts size: " << model->getMesh()[0].vertices.size() <<'\n'<< std::endl;
+}

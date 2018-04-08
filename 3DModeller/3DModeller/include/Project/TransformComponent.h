@@ -48,7 +48,7 @@ public:
 		glm::mat4 rotMatrix = glm::mat4_cast(m_orientation);
 		modelMatrix = transMatrix * rotMatrix * scaleMatrix;
 	}
-	void translate(const glm::vec3 &v) { m_position += v; }
+	void translate(const glm::vec3 &v) { m_position += v;}
 	void translate(float x, float y, float z) { m_position += glm::vec3(x, y, z); }
 
 	void rotate(float angle, const glm::vec3 &axis) { m_orientation *= glm::angleAxis(angle, axis * m_orientation); }
@@ -60,9 +60,6 @@ public:
 	void yaw(float angle) { rotate(angle, 0.0f, 1.0f, 0.0f); }
 	void pitch(float angle) { rotate(angle, 1.0f, 0.0f, 0.0f); }
 	void roll(float angle) { rotate(angle, 0.0f, 0.0f, 1.0f); }
-
-
-//mirror geometry
 
 
 private:

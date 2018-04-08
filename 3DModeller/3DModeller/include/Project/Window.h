@@ -11,6 +11,7 @@
 
 
 
+
 #pragma region Inputs
 //void KeyCallBack(GLFWwindow *window, int key, int scancode, int action, int mode);
 //void ScrollCallBack(GLFWwindow *window, double xOffset, double yOffset);
@@ -40,8 +41,10 @@ public:
 
 private:
 	Command command;
-	nanogui::FormHelper *gui;
-	nanogui::ref<nanogui::Window> nanoguiWindow;
+	nanogui::FormHelper *guiTransform; 
+	nanogui::FormHelper *guiToolbar;
+	nanogui::ref<nanogui::Window> guiTransformWindow;
+	nanogui::ref<nanogui::Window> guiToolbarWindow;
 	bool m_bGUIActive = false;
 	
 	GLFWwindow* window;

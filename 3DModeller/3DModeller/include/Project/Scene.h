@@ -1,6 +1,7 @@
 #pragma once
 #include <Project/ModelComponent.h>
 #include <Project/TransformComponent.h>
+#include <nanogui/nanogui.h>
 #include <Project/SceneObject.h>
 #include <Project/Camera.h>
 #include <Project/Shader.h>

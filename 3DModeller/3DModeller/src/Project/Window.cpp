@@ -144,8 +144,10 @@ void Window::InitWindow()
 	screen = new nanogui::Screen();
 	screen->initialize(window, true);
 	
-	gui = new nanogui::FormHelper(screen);
-	nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Transform");
+	guiToolbar = new nanogui::FormHelper(screen);
+	guiTransform = new nanogui::FormHelper(screen);
+	guiTransformWindow = guiTransform->addWindow(Eigen::Vector2i(10, 10), "Transform");
+	guiToolbarWindow =   guiToolbar->addWindow(Eigen::Vector2i(10, 10), "Tools");
 
 }
 
@@ -154,30 +156,40 @@ void Window::InitUI()
 	
 	if (!m_bGUIActive)
 	{
-		gui->addGroup("Scale");
-		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x, true);
-		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y,true);
-		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z,true);
-		gui->addGroup("Position");
-		gui->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x,true);
-		gui->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y,true);
-		gui->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z,true);
-		gui->addGroup("Rotation");
-		gui->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x,true);
-		gui->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y,true);
-		gui->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z,true);
+		guiTransform->addGroup("Scale");
+		guiTransform->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x, true);
+		guiTransform->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y,true);
+		guiTransform->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.z,true);
+		guiTransform->addGroup("Position");
+		guiTransform->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.x,true);
+		guiTransform->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y,true);
+		guiTransform->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z,true);
+		guiTransform->addGroup("Rotation");
+		guiTransform->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x,true);
+		guiTransform->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y,true);
+		guiTransform->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z,true);
 		
+		
+	
+		guiToolbar->addGroup("Primitives");
+		guiToolbar->addButton("Spawn Cube",			[&]() { scene->GenModel("cube.obj"); })->setTooltip("Spawn a cube");
+		guiToolbar->addButton("Spawn Cylinder",		[&]() { scene->GenModel("cylinder.obj"); })->setTooltip("Spawn a cyliner");
+		guiToolbar->addButton("Spawn Sphere",		[&]() { scene->GenModel("sphere.obj"); })->setTooltip("Spawn a sphere");
+		guiToolbar->addGroup("Selection Mode");
+
+		//guiToolbar->addButton("Mirror Geometry", [&]() { guiToolbar-> });
 		m_bGUIActive = true;
-		screen->updateFocus(nanoguiWindow);
+		screen->updateFocus(guiTransformWindow);
 		screen->setVisible(true);
-		nanoguiWindow->setPosition(nanogui::Vector2i(10, 10));
+		guiTransformWindow->setPosition(nanogui::Vector2i(10, 10));
 		screen->performLayout();
+	
 	}
 	
 	
 	
 	
-	//gui->refresh();
+	guiTransform->refresh();
 	
 }
 
@@ -197,8 +209,6 @@ void Window::Update()
 		onCLick();
 		DoMovement();
 		glDisable(GL_DEPTH_TEST);
-
-		
 		screen->drawWidgets();
 		screen->drawContents();
 		glEnable(GL_DEPTH_TEST);
@@ -207,7 +217,7 @@ void Window::Update()
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
 		
-		onCLick();
+		//onCLick();
 		
 	}
 }
@@ -218,10 +228,8 @@ void Window::Render()
 	if (abkeys[GLFW_KEY_M])
 	{
 		std::cout << "M key" << std::endl;
-		//command.MirrorGeometryYZ(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 7);
-		//command.MirrorGeometryZX(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(),1);
-		//command.MirrorGeometryXY(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), 2.5);
-		scene->m_Objects[0]->getComponent<TransformComponent>()->translate(10, 0, 0);
+		//command.MirrorGeometryXY(scene->m_Objects[0]->getComponent<ModelComponent>()->getModel, 1.0f);
+		command.ExtrudeFace(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), glm::vec3(10, 10, 10));
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
 	{
@@ -373,7 +381,7 @@ glm::vec3 Window::getRay()
 	ray_world.x = (glm::inverse(camera->GetViewMatrix())* ray_eye).x;
 	ray_world.y = (glm::inverse(camera->GetViewMatrix())* ray_eye).y;
 	ray_world.z = (glm::inverse(camera->GetViewMatrix())* ray_eye).z;
-	//glm::normalize(ray_world);
+	glm::normalize(ray_world);
 	//std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
 	return ray_world;
 }
@@ -394,6 +402,8 @@ void Window::onCLick()
 
 void Window::Picker(glm::vec3 rayHit)
 {
+	int r = 1;
+	glm::vec3 intersection(0.0f, 0.0f, 0.0f);
 	if (scene->GetMode() == 0)//object mode
 	{
 		std::cout << "Object Mode" << endl;
@@ -401,17 +411,10 @@ void Window::Picker(glm::vec3 rayHit)
 
 		for (int i = 0; i < scene->m_Objects.size(); i++)
 		{
-			float dist = 0;
-			glm::vec3 pos = scene->m_Objects[i]->getComponent<TransformComponent>()->m_position;
-			glm::vec3 vNorm = glm::normalize(pos);
-			glm::vec3 vDir = pos - rayHit;
-			dist = sqrt((pow(vDir.x, 2) + pow(vDir.y, 2) + pow(vDir.z, 2))); //normalised distance between obj and raypos
-			if (dist <= 1)
-			{
-				std::cout << "Hit" << endl;
-				scene->SetFocus(i);
-				return;
-			}
+			
+			glm::vec3 centre = scene->m_Objects[i]->getComponent<TransformComponent>()->m_position;
+			
+	
 		}
 		
 	}

@@ -53,6 +53,7 @@ void Scene::render(Camera camera)
 
 		}
 		setMatrices(camera, i); //update shaders with new camera and model matrices for each object i
+		m_Objects[i]->getComponent<TransformComponent>()->setModelMatrix();
 		m_Objects[i]->getComponent<ModelComponent>()->getModel().render(m_shaders[m_RenderMode]->getHandle());
 		//m_Objects[i]->getComponent<ModelComponent>()->getModel().getMesh()[0].vertices[i].position;
 	}

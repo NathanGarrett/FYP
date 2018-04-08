@@ -15,6 +15,7 @@ public:
 	void MirrorGeometryXY(Model *model, float zOffset);
 	void MirrorGeometryYZ(Model *model, float xOffset);
 	void MirrorGeometryZX(Model *model, float yOffset);
+	void ExtrudeFace(Model *model, glm::vec3 mag);
 
 private:
 	CLHandler handler;
@@ -33,5 +34,7 @@ private:
 		0, -1, 0, 0,
 		0,  0,  1, 0,
 		0, 0, 0, 1 };
+
+
 };
 

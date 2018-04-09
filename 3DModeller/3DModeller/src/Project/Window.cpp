@@ -229,7 +229,8 @@ void Window::Render()
 	{
 		std::cout << "M key" << std::endl;
 		//command.MirrorGeometryXY(scene->m_Objects[0]->getComponent<ModelComponent>()->getModel, 1.0f);
-		command.ExtrudeFace(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), glm::vec3(10, 10, 10));
+		command.ExtrudeFace(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), glm::vec3(0, 0, 1));
+
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
 	{

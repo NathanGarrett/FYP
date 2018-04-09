@@ -2,7 +2,7 @@
 #include <Project\CLHandler.h>
 #include <Project\Model.h>
 #include <Project\Mesh.h>
-#include <ASSIMP\postprocess.h>
+#include <ASSIMP/mesh.h>
 #include <GLM\glm.hpp>
 #include <vector>
 #include <iostream>
@@ -16,21 +16,24 @@ public:
 	void MirrorGeometryYZ(Model *model, float xOffset);
 	void MirrorGeometryZX(Model *model, float yOffset);
 	void ExtrudeFace(Model *model, glm::vec3 mag);
-
+	void BevelObject(Model *model, float offset);
 private:
 	CLHandler handler;
 
-	glm::mat4 reflectXY = { 1, 0, 0, 0,
+	glm::mat4 reflectXY = 
+	{ 1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0,-1, 0,
 		0, 0, 0, 1 };
 
-	glm::mat4 reflectYZ = { -1, 0, 0, 0,
+	glm::mat4 reflectYZ = 
+	{ -1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0,-1, 0,
 		0, 0, 0, 1 };
 
-	glm::mat4 reflectZX = { 1,  0, 0, 0,
+	glm::mat4 reflectZX = 
+	{ 1,  0, 0, 0,
 		0, -1, 0, 0,
 		0,  0,  1, 0,
 		0, 0, 0, 1 };

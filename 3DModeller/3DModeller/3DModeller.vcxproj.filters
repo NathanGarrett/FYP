@@ -86,7 +86,7 @@
     <ClCompile Include="src\Project\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
+    <ClCompile Include="src\Project\Command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

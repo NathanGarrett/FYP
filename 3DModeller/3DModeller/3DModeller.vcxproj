@@ -34,9 +34,9 @@
     <ClInclude Include="include\Project\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Command.cpp" />
     <ClCompile Include="src\GLAD\glad.c" />
     <ClCompile Include="src\Project\Camera.cpp" />
+    <ClCompile Include="src\Project\Command.cpp" />
     <ClCompile Include="src\Project\drawable.cpp" />
     <ClCompile Include="src\Project\main.cpp" />
     <ClCompile Include="src\Project\Mesh.cpp" />

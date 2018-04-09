@@ -112,15 +112,30 @@ void Command::MirrorGeometryZX(Model * model, float yOffset)
 
 void Command::ExtrudeFace(Model * model, glm::vec3 mag)
 {
-	//std::vector<Vertex> newVerts;
-	//newVerts.resize(3);
+	/*
+	steps:
+	1. duplicate mesh
+	2. scale duplicate
+	3. 
+	4.
+	5.
+	*/
+	
 
-	glm::mat4 Extrude =
+	//std::vector<unsigned int> indices = model->getMesh()[0].indices;
+
+	/*glm::mat4 Extrude =
 	{   1, 0, 0, mag.x,
 		0, 1, 0, mag.y,
 		0, 0, 1, mag.z,
-		0, 0, 0, 1 };
-	for (int i = 0; i < 6; i++)
+		0, 0, 0, 1 };*/
+
+	glm::mat4 Extrude =
+	{ 1+mag.x,   0,      0,		0,
+		0,   1+mag.y,    0,	    0,
+		0,     0,    1+mag.z,		0,
+		0,     0,      0,	    1 };
+	for (int i = 0; i < model->getMesh()[0].vertices.size(); i++)
 	{
 		glm::vec3    pos = model->getMesh()[0].vertices[i].position;
 		glm::vec3 newPos = handler.MAT_VEC_MULT(pos, Extrude);
@@ -135,3 +150,17 @@ void Command::ExtrudeFace(Model * model, glm::vec3 mag)
 	model->getMesh()[0].setupMesh();
 	//std::cout << "\n Extrude vert done, verts size: " << model->getMesh()[0].vertices.size() <<'\n'<< std::endl;
 }
+void Command::BevelObject(Model * model, float offset)
+{
+	/*
+	steps:
+	1. Duplicate the verts
+	2. 
+	3.
+	4.
+	5.
+	*/
+}
+////////////////////////////////////////////////////////////
+//NB:On save, multiply model matrix per vertex then export//
+////////////////////////////////////////////////////////////

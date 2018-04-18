@@ -50,8 +50,12 @@ public:
 	void Picker(glm::vec3 rayVector,glm::vec3 rayOrigin);
 	bool RayIntersectsTriangle(glm::vec3 rayOrigin, glm::vec3 rayVector, Triangle inTriangle, glm::vec3& outIntersectionPoint);
 private:
+	//////////////////////////////////UI Stuff
 	Command command;
+	int meshNumber;
+	float xmag,ymag,zmag;
 	std::vector<int> indices;
+	float offset;
 	string sfileName;
 	nanogui::FormHelper *guiTransform; 
 	nanogui::FormHelper *guiToolbar;
@@ -60,7 +64,9 @@ private:
 	nanogui::ref<nanogui::Window> guiToolbarWindow;
 	nanogui::ref<nanogui::Window> guiImporterExporterWindow;
 	bool m_bGUIActive = false;
-	
+	///////////////////////////////
+
+
 	GLFWwindow* window;
 	const GLuint m_kiWidth = 1280, m_kiHeight = 720;
 	double EPSILON = 0.0000001;

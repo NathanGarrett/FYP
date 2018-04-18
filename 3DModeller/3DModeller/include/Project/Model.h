@@ -27,6 +27,7 @@ private:
 	string directory;
 	vector<Texture> v_textures;
 	const aiScene *scene;
+	aiScene **copy;
 	void loadModel(string path);
 	void processNode(aiNode* node, const aiScene* scene);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);

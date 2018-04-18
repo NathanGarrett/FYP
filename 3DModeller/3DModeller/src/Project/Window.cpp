@@ -1,7 +1,5 @@
 #include <Project/Window.h>
 
-#include <ASSIMP\Exporter.hpp>
-
 
 Camera* camera = new Camera(glm::vec3(0.0f, 0.0f, 10.0f));
 GLfloat flastX = 1280 / 2.0f;
@@ -155,15 +153,6 @@ void Window::InitWindow()
 	guiImporterExporterWindow = guiImporterExporter->addWindow(Eigen::Vector2i(10, 10), "File IO");
 
 	indices.resize(3);
-
-	Assimp::Exporter e;
-	size_t count = e.GetExportFormatCount();
-	for (int i = 0; i < count; i++)
-	{
-		std::cout << e.GetExportFormatDescription(i)->id << endl;
-		std::cout << e.GetExportFormatDescription(i)->fileExtension << endl;
-		std::cout << e.GetExportFormatDescription(i)->description << endl;
-	}
 }
 
 void Window::InitUI()
@@ -187,20 +176,24 @@ void Window::InitUI()
 	
 		//Tools
 		guiToolbar->addGroup("Primitives");
-		guiToolbar->addButton("Spawn Cube",			[&]() { scene->GenModel("cube.obj"); })->setTooltip("Spawn a cube");
-		guiToolbar->addButton("Spawn Cylinder",		[&]() { scene->GenModel("cylinder.obj"); })->setTooltip("Spawn a cyliner");
-		guiToolbar->addButton("Spawn Sphere",		[&]() { scene->GenModel("sphere.obj"); })->setTooltip("Spawn a sphere");
+		guiToolbar->addButton("Spawn Cube",			[&]() { scene->GenModel("cube.obj");		});
+		guiToolbar->addButton("Spawn Cylinder",		[&]() { scene->GenModel("cylinder.obj");	});
+		guiToolbar->addButton("Spawn Sphere",		[&]() { scene->GenModel("sphere.obj");		});
 		guiToolbar->addGroup("Selection Mode");
 		guiToolbar->addGroup("Mirror Geometry");
-		guiToolbar->addButton("Mirror XY", [&]() { command.MirrorGeometryXY(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
-		guiToolbar->addButton("Mirror YZ", [&]() { command.MirrorGeometryYZ(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
-		guiToolbar->addButton("Mirror ZX", [&]() { command.MirrorGeometryZX(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
+		guiToolbar->addVariable("Offset", offset, true)->setDefaultValue("2.5");
+		guiToolbar->addButton("Mirror XY", [&]() { command.MirrorGeometryXY(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
+		guiToolbar->addButton("Mirror YZ", [&]() { command.MirrorGeometryYZ(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
+		guiToolbar->addButton("Mirror ZX", [&]() { command.MirrorGeometryZX(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
 		guiToolbar->addGroup("Extrude");
-		guiToolbar->addButton("Extrude", [&]() { command.ExtrudeFace(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(),indices[0],indices[1],indices[2],glm::vec3(0,0,1)); });
+		guiToolbar->addVariable("Extrude Mag x", xmag, true);
+		guiToolbar->addVariable("Extrude Mag y", ymag, true);
+		guiToolbar->addVariable("Extrude Mag z", zmag, true);
+		guiToolbar->addButton("Extrude", [&]() { command.ExtrudeFace(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(),indices[0],indices[1],indices[2],meshNumber,glm::vec3(xmag,ymag,zmag)); });
 		guiToolbar->addGroup("Bevel Edge");
 		//File IO
 		guiImporterExporter->addGroup("Import a model from folder");
-		guiImporterExporter->addVariable("File Name: ", sfileName, true)->setDefaultValue("cube.obj");
+		guiImporterExporter->addVariable("File Name:", sfileName, true);
 		guiImporterExporter->addButton("Import", [&]() {scene->GenModel(sfileName);} );
 		guiImporterExporter->addGroup("Export selected model");
 		guiImporterExporter->addButton("Export", [&]() {PrepModel(); });
@@ -208,9 +201,17 @@ void Window::InitUI()
 		guiImporterExporter->addButton("Destroy Selected", [&]() {scene->DestroyModel(); });
 
 		m_bGUIActive = true;
-		screen->updateFocus(guiTransformWindow);
+		//screen->updateFocus(guiTransformWindow);
 		screen->setVisible(true);
-		guiTransformWindow->setPosition(nanogui::Vector2i(10, 10));
+
+		guiTransformWindow->setWidth(30);
+		guiImporterExporterWindow->setWidth(30);
+		guiToolbarWindow->setWidth(30);
+
+		guiTransformWindow->setPosition(nanogui::Vector2i(1150, 10));
+		guiToolbarWindow->setPosition(nanogui::Vector2i(10, 10));
+		guiImporterExporterWindow->setPosition(nanogui::Vector2i(1050, 450));
+
 		screen->performLayout();
 		
 	}
@@ -429,10 +430,10 @@ void Window::Picker(glm::vec3 rayVector,glm::vec3 rayOrigin)
 							scene->m_vertsSelected[0] = t.vertA;
 							scene->m_vertsSelected[1] = t.vertB;
 							scene->m_vertsSelected[2] = t.vertC;
-							indices[0] = j;
-							indices[1] = 1 + (3 * j);
-							indices[2] = 2 + (3 * j);
-
+							indices[0] = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].indices[0 + (3 * j)];
+							indices[1] = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].indices[1 + (3 * j)];
+							indices[2] = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].indices[2 + (3 * j)];
+							meshNumber = i;
 						}
 					}
 			}	

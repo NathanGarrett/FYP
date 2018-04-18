@@ -112,9 +112,10 @@ void Model::render(const unsigned int shaderProgram)
 void Model::Export()
 {
 	
-	//Assimp::Exporter exporter;
-	//exporter.Export(scene, "obj", "../models/newModel");
-	//cout << exporter.GetErrorString() << endl;
+	
+	Assimp::Exporter exporter;
+	exporter.ExportToBlob(scene, "obj", aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+	std::cout << "blobbing error: " << exporter.GetErrorString() << std::endl;
 }
 
 vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)

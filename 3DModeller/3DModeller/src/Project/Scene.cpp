@@ -10,6 +10,7 @@ Scene::Scene()
 void Scene::initScene(Camera camera)
 {
 	m_shaders.reserve(2);
+	m_vertsSelected.resize(3);
 	compileAndLinkShader();
     glEnable(GL_DEPTH_TEST);
 }
@@ -32,7 +33,23 @@ void Scene::render(Camera camera)
 	m_shaders[m_RenderMode]->setUniform("Line.Width", 0.0001f);
 	m_shaders[m_RenderMode]->setUniform("Line.Color", glm::vec4(1.0, 1.0, 1.0, 1.0));
 
-	
+	if (vertsSelected)
+	{
+		m_shaders[m_RenderMode]->setUniform("vertsSelected", vertsSelected);
+		m_shaders[m_RenderMode]->setUniform("selectColor", glm::vec4(0.0, 0.0, 0.0,1.0));
+		m_shaders[m_RenderMode]->setUniform("vertA", m_vertsSelected[0]);
+		m_shaders[m_RenderMode]->setUniform("vertB", m_vertsSelected[1]);
+		m_shaders[m_RenderMode]->setUniform("vertC", m_vertsSelected[2]);
+	}
+	if (!vertsSelected)
+	{
+		m_shaders[m_RenderMode]->setUniform("vertsSelected", vertsSelected);
+	}
+	//draw a point at each vert
+	//do UI elements for things
+	//job done
+
+
 	
 	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
@@ -107,9 +124,25 @@ void Scene::GenModel(std::string model)
 
 }
 
+void Scene::DestroyModel()
+{
+	std::cout << "object count " << m_Objects.size() << endl;
+	m_Objects.erase(m_Objects.begin()+m_Focus);
+	std::cout << "object count " << m_Objects.size() << endl;
+
+}
+
+void Scene::ExportModel()
+{
+	//m_Objects[m_Focus]->getComponent<ModelComponent>()->getModel().Export();
+	m_Objects[m_Focus]->getComponent<ModelComponent>()->getModel().Export();
+
+}
+
 
 void Scene::CycleModes()
 {
+	vertsSelected = false;
 	if (m_RenderMode < m_shaders.size()-1)
 	{
 		m_RenderMode++; 
@@ -117,6 +150,7 @@ void Scene::CycleModes()
 	else if (m_RenderMode == m_shaders.size()-1)
 	{
 		m_RenderMode = 0;
+		
 	}
 }
 
@@ -131,6 +165,8 @@ void Scene::CycleFoci()
 		m_Focus = 0;
 	}
 }
+
+
 
 void Scene::SetFocus(int focus)
 {

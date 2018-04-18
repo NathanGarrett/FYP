@@ -2,7 +2,7 @@
 
 void Command::MirrorGeometryXY(Model * model, float zOffset)
 {
-		std::cout <<"size of v_meshes before: "<< model->getMeshCount() << std::endl;
+		//std::cout <<"size of v_meshes before: "<< model->getMeshCount() << std::endl;
 		//create data buffers
 		std::vector<Vertex> newVerts;
 		std::vector<unsigned int> newIndices;
@@ -41,7 +41,7 @@ void Command::MirrorGeometryXY(Model * model, float zOffset)
 				newVerts[i].normal = model->getMesh()[j].vertices[i].normal;
 				newVerts[i].textureCoords = model->getMesh()[j].vertices[i].textureCoords;
 				//print out new vert pos
-				std::cout << "finPos: " << newVerts[i].position.x << " " << newVerts[i].position.y << " " << newVerts[i].position.z << "\n" << std::endl;
+				//std::cout << "finPos: " << newVerts[i].position.x << " " << newVerts[i].position.y << " " << newVerts[i].position.z << "\n" << std::endl;
 
 			}
 			//assign new indices
@@ -110,46 +110,39 @@ void Command::MirrorGeometryZX(Model * model, float yOffset)
 	std::cout << "Mirror-XY Done, v_meshes size: " << model->getMeshCount() << std::endl;
 }
 
-void Command::ExtrudeFace(Model * model, glm::vec3 mag)
+void Command::ExtrudeFace(Model * model, int v1, int v2, int v3, glm::vec3 mag)
 {
-	/*
-	steps:
-	1. duplicate mesh
-	2. scale duplicate
-	3. 
-	4.
-	5.
-	*/
-	
 
-	//std::vector<unsigned int> indices = model->getMesh()[0].indices;
-
-	/*glm::mat4 Extrude =
-	{   1, 0, 0, mag.x,
-		0, 1, 0, mag.y,
-		0, 0, 1, mag.z,
-		0, 0, 0, 1 };*/
-
+	//glm::mat4 Extrude =
+	//{	1+mag.x,       0,        0,		    0,
+	//	   0,		1+mag.y,     0,			0,
+	//	   0,		   0,	   1+mag.z,		0,
+	//	   0,		   0,        0,			1 };
 	glm::mat4 Extrude =
-	{ 1+mag.x,   0,      0,		0,
-		0,   1+mag.y,    0,	    0,
-		0,     0,    1+mag.z,		0,
-		0,     0,      0,	    1 };
-	for (int i = 0; i < model->getMesh()[0].vertices.size(); i++)
-	{
-		glm::vec3    pos = model->getMesh()[0].vertices[i].position;
-		glm::vec3 newPos = handler.MAT_VEC_MULT(pos, Extrude);
-		model->getMesh()[0].vertices[i].position = newPos;
-		//newVerts[i].normal = model->getMesh()[0].vertices[i].normal;
-		//newVerts[i].textureCoords = model->getMesh()[0].vertices[i].textureCoords;
-	}
+	{	   1,   0,    0,   mag.x,
+		   0,	1,    0,   mag.y,
+		   0,	0,    1,   mag.z,
+		   0,	0,    0,	1 };
+
+	//Mesh newMesh(model->getMesh()[0]);
+	glm::vec3 posA = model->getMesh()[0].vertices[v1].position;
+	glm::vec3 posB = model->getMesh()[0].vertices[v2].position;
+	glm::vec3 posC = model->getMesh()[0].vertices[v3].position;
+	//glm::vec3 norm = glm::cross((posA-posB), (posA - posC));
 	
-	//model->getMesh()[0].vertices[0].position = newPos;
-	//glm::vec3    finalpos = model->getMesh()[0].vertices[0].position;
-	
+	posA = handler.MAT_VEC_MULT(posA, Extrude);
+	posB = handler.MAT_VEC_MULT(posB, Extrude);
+	posC = handler.MAT_VEC_MULT(posC, Extrude);
+
+	model->getMesh()[0].vertices[8].position = posA;
+	//model->getMesh()[0].vertices[v2].position = posB;
+	//model->getMesh()[0].vertices[v3].position = posC;
 	model->getMesh()[0].setupMesh();
-	//std::cout << "\n Extrude vert done, verts size: " << model->getMesh()[0].vertices.size() <<'\n'<< std::endl;
+	
+	std::cout << "Extrude face Done" <<std::endl;
+
 }
+
 void Command::BevelObject(Model * model, float offset)
 {
 	/*
@@ -160,6 +153,17 @@ void Command::BevelObject(Model * model, float offset)
 	4.
 	5.
 	*/
+}
+void Command::CommitTransform(Model * model, glm::mat4 modmat)
+{
+	for (int i = 0; i < model->getMeshCount(); i++)
+	{
+		for (int j = 0; j < model->getMesh()[i].vertices.size(); j++)
+		{
+			glm::vec3 pos = model->getMesh()[i].vertices[j].position;
+			model->getMesh()[i].vertices[j].position = handler.MAT_VEC_MULT(pos, modmat);
+		}
+	}
 }
 ////////////////////////////////////////////////////////////
 //NB:On save, multiply model matrix per vertex then export//

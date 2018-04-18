@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "Mesh.h"
-
+#include <ASSIMP\Exporter.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
@@ -12,7 +12,11 @@ public:
 	Model() {};
 	Model(string filepath);
 
+
 	void render(const unsigned int shaderProgram);
+
+	void Export();
+	
 
 	static unsigned int TextureFromFile(const char* filepath, const string& directory, bool gamma = false);
 	static unsigned int TextureFromFile(const char* filepath, bool gamma = false);
@@ -22,7 +26,7 @@ private:
 	std::vector<Mesh> v_meshes;
 	string directory;
 	vector<Texture> v_textures;
-
+	const aiScene *scene;
 	void loadModel(string path);
 	void processNode(aiNode* node, const aiScene* scene);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);

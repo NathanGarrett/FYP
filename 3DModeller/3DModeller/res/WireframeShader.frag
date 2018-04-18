@@ -21,6 +21,13 @@ in vec3 GPosition;
 in vec3 GlightPos;
 noperspective in vec3 GEdgeDistance;
 
+//face selection
+uniform bool vertsSelected;
+uniform vec4 selectColor;
+uniform vec3 vertA;
+uniform vec3 vertB;
+uniform vec3 vertC;
+
 layout (location = 0) out vec4 FragColour;
 
 vec4 PhongModel(vec3 vertPos, vec3 N)
@@ -56,5 +63,21 @@ void main()
 	//Find the mix factor with the line colour
 	float mixVal = smoothstep(Line.Width - 0.01, Line.Width +0.01, d);
 	//mix surafce colour with line colour
-	FragColour = mix(Line.Color,color,mixVal);
+	
+	
+	if(vertsSelected)
+	{
+		if(GPosition == vertA || GPosition == vertB || GPosition == vertC)
+		{
+			FragColour = mix(selectColor,color,mixVal);
+		}
+		else
+		{
+			FragColour = mix(selectColor,color,mixVal);
+		}
+	}
+	else
+	{
+		FragColour = mix(Line.Color,color,mixVal);
+	}
 }

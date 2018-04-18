@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+
 #include "Model.h"
 
 class ModelComponent : public Component
@@ -14,7 +15,11 @@ public:
 	void OnMessage(const std::string m) override
 	{
 	}
+
 	Model& getModel() { return *m_Model; };
+
+	
+
 	void setTextureID(unsigned int id) { m_iTextureID = id; }
 	unsigned int getTextureID() const { return m_iTextureID; }
 	void Disable() { m_bEnable = false; }

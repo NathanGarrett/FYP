@@ -12,7 +12,7 @@ Model::Model(string filepath)
 void Model::loadModel(string filepath)
 {
 	Assimp::Importer import;
-	const aiScene *scene = import.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+	scene = import.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -107,6 +107,14 @@ void Model::render(const unsigned int shaderProgram)
 	{
 		mesh.render(shaderProgram);
 	}
+}
+
+void Model::Export()
+{
+	
+	//Assimp::Exporter exporter;
+	//exporter.Export(scene, "obj", "../models/newModel");
+	//cout << exporter.GetErrorString() << endl;
 }
 
 vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)

@@ -1,5 +1,8 @@
 #include <Project/Window.h>
 
+#include <ASSIMP\Exporter.hpp>
+
+
 Camera* camera = new Camera(glm::vec3(0.0f, 0.0f, 10.0f));
 GLfloat flastX = 1280 / 2.0f;
 GLfloat flastY = 720 / 2.0f;
@@ -144,11 +147,23 @@ void Window::InitWindow()
 	screen = new nanogui::Screen();
 	screen->initialize(window, true);
 	
+	guiImporterExporter = new nanogui::FormHelper(screen);
 	guiToolbar = new nanogui::FormHelper(screen);
 	guiTransform = new nanogui::FormHelper(screen);
 	guiTransformWindow = guiTransform->addWindow(Eigen::Vector2i(10, 10), "Transform");
 	guiToolbarWindow =   guiToolbar->addWindow(Eigen::Vector2i(10, 10), "Tools");
+	guiImporterExporterWindow = guiImporterExporter->addWindow(Eigen::Vector2i(10, 10), "File IO");
 
+	indices.resize(3);
+
+	Assimp::Exporter e;
+	size_t count = e.GetExportFormatCount();
+	for (int i = 0; i < count; i++)
+	{
+		std::cout << e.GetExportFormatDescription(i)->id << endl;
+		std::cout << e.GetExportFormatDescription(i)->fileExtension << endl;
+		std::cout << e.GetExportFormatDescription(i)->description << endl;
+	}
 }
 
 void Window::InitUI()
@@ -156,6 +171,7 @@ void Window::InitUI()
 	
 	if (!m_bGUIActive)
 	{
+		//Transform
 		guiTransform->addGroup("Scale");
 		guiTransform->addVariable("X", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.x, true);
 		guiTransform->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_scale.y,true);
@@ -165,25 +181,38 @@ void Window::InitUI()
 		guiTransform->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y,true);
 		guiTransform->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z,true);
 		guiTransform->addGroup("Rotation");
-		guiTransform->addVariable("Roll", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.x,true);
-		guiTransform->addVariable("Pitch", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.y,true);
-		guiTransform->addVariable("Yaw", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_orientation.z,true);
-		
-		
+		//guiTransform->addButton("Roll", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->roll(1.f); });
+		//guiTransform->addButton("Pitch", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->pitch(1.f); });
+		//guiTransform->addButton("Yaw", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->yaw(1.f); });
 	
+		//Tools
 		guiToolbar->addGroup("Primitives");
 		guiToolbar->addButton("Spawn Cube",			[&]() { scene->GenModel("cube.obj"); })->setTooltip("Spawn a cube");
 		guiToolbar->addButton("Spawn Cylinder",		[&]() { scene->GenModel("cylinder.obj"); })->setTooltip("Spawn a cyliner");
 		guiToolbar->addButton("Spawn Sphere",		[&]() { scene->GenModel("sphere.obj"); })->setTooltip("Spawn a sphere");
 		guiToolbar->addGroup("Selection Mode");
+		guiToolbar->addGroup("Mirror Geometry");
+		guiToolbar->addButton("Mirror XY", [&]() { command.MirrorGeometryXY(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
+		guiToolbar->addButton("Mirror YZ", [&]() { command.MirrorGeometryYZ(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
+		guiToolbar->addButton("Mirror ZX", [&]() { command.MirrorGeometryZX(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), 1.0f); });
+		guiToolbar->addGroup("Extrude");
+		guiToolbar->addButton("Extrude", [&]() { command.ExtrudeFace(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(),indices[0],indices[1],indices[2],glm::vec3(0,0,1)); });
+		guiToolbar->addGroup("Bevel Edge");
+		//File IO
+		guiImporterExporter->addGroup("Import a model from folder");
+		guiImporterExporter->addVariable("File Name: ", sfileName, true)->setDefaultValue("cube.obj");
+		guiImporterExporter->addButton("Import", [&]() {scene->GenModel(sfileName);} );
+		guiImporterExporter->addGroup("Export selected model");
+		guiImporterExporter->addButton("Export", [&]() {PrepModel(); });
+		guiImporterExporter->addGroup("Util");
+		guiImporterExporter->addButton("Destroy Selected", [&]() {scene->DestroyModel(); });
 
-		//guiToolbar->addButton("Mirror Geometry", [&]() { guiToolbar-> });
 		m_bGUIActive = true;
 		screen->updateFocus(guiTransformWindow);
 		screen->setVisible(true);
 		guiTransformWindow->setPosition(nanogui::Vector2i(10, 10));
 		screen->performLayout();
-	
+		
 	}
 	
 	
@@ -217,19 +246,23 @@ void Window::Update()
 		// swap buffers i.e. draw to screen
 		glfwSwapBuffers(window);
 		
-		//onCLick();
+		onCLick();
 		
 	}
 }
 
 void Window::Render()
 {
-	if (scene->m_Objects.size() < 1) { scene->GenModel("cube.obj"); }
+	if (scene->m_Objects.size() < 1) 
+	{ 
+		scene->GenModel("cube.obj");
+		std::cout << scene->m_Objects[0]->getComponent<ModelComponent>()->getModel().getMesh()[0].vertices.size() << std::endl;
+	}
 	if (abkeys[GLFW_KEY_M])
 	{
 		std::cout << "M key" << std::endl;
-		//command.MirrorGeometryXY(scene->m_Objects[0]->getComponent<ModelComponent>()->getModel, 1.0f);
-		command.ExtrudeFace(&scene->m_Objects[0]->getComponent<ModelComponent>()->getModel(), glm::vec3(0, 0, 1));
+//		command.ExtrudeFace(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), glm::vec3(1,0,0));
+		//scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->translate(1, 0, 0);
 
 	}
 	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_TAB])
@@ -246,8 +279,17 @@ void Window::Render()
 		scene->GenModel("cube.obj");
 	}
 	InitUI();
+
 	scene->render(*camera);
 }
+
+void Window::PrepModel()
+{
+	command.CommitTransform(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->getModelMatrix());
+	scene->ExportModel();
+}
+
+
 #pragma region Getters
 GLFWwindow * Window::GetWindow()
 {
@@ -271,67 +313,6 @@ GLuint Window::GetHeight()
 #pragma endregion
 
 #pragma region Input
-
-//void KeyCallBack(GLFWwindow * window, int key, int scancode, int action, int mode)
-//{
-//	
-//	//screen->keyCallbackEvent(key, scancode, action, mode);
-//	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-//	{
-//		glfwSetWindowShouldClose(window, GL_TRUE);
-//	}
-//
-//	if (key >= 0 && key <= 1024)
-//	{
-//		if (action == GLFW_PRESS)
-//		{
-//			abkeys[key] = true;
-//		}
-//
-//		else if (action == GLFW_RELEASE)
-//		{
-//			abkeys[key] = false;
-//		}
-//	}
-//
-//	if (abkeys[GLFW_KEY_LEFT_CONTROL] && abkeys[GLFW_KEY_R])
-//	{
-//		camera->ResetCamera();
-//	}
-//
-//
-//}
-//void ScrollCallBack(GLFWwindow * window, double xOffset, double yOffset)
-//{	
-//		
-//		camera->ScrollProc(static_cast<GLfloat>(yOffset));
-//		//screen->scrollCallbackEvent(xOffset, yOffset);
-//}
-//void MouseCallBack(GLFWwindow * window, double xPos, double yPos)
-//{
-//	GLfloat	fxPos = static_cast<GLfloat>(xPos);
-//	GLfloat	fyPos = static_cast<GLfloat>(yPos);
-//
-//	if (abkeys[GLFW_KEY_LEFT_SHIFT])
-//	{
-//		
-//		if (bFirstMouse)
-//		{
-//			flastX = fxPos;
-//			flastY = fyPos;
-//			bFirstMouse = false;
-//		}
-//		GLfloat xOffset = fxPos - flastX;
-//		GLfloat yOffset = flastY - fyPos;
-//
-//		
-//
-//		camera->MouseProc(xOffset, yOffset);
-//	}
-//	flastX = fxPos;
-//	flastY = fyPos;
-//	
-//}
 
 void DoMovement()
 {
@@ -361,7 +342,7 @@ void DoMovement()
 
 #pragma region MouseClick
 
-glm::vec3 Window::getRay()
+glm::vec3 Window::getRayVector()
 {
 	//step one get viewport co-ords
 	glm::vec2 clickPos(flastX, flastY);
@@ -384,14 +365,28 @@ glm::vec3 Window::getRay()
 	ray_world.z = (glm::inverse(camera->GetViewMatrix())* ray_eye).z;
 	glm::normalize(ray_world);
 	//std::cout<< ray_world.x <<ray_world.y<<ray_world.z<< std::endl;
-	return ray_world;
+	return ray_world;//ray vector
+}
+
+
+
+glm::vec3 Window::getRayOrigin()
+{
+	//step one get viewport co-ords
+	glm::vec2 clickPos(flastX, flastY);
+	glm::vec3 WorldClickPos;
+	//step two 3d normalised device co-ords
+	WorldClickPos.x = (2.0f * clickPos.x) / m_kiWidth - 1.0f;
+	WorldClickPos.y = 1.0f - (2.0f * clickPos.y) / m_kiHeight;
+	WorldClickPos.z = 1.0f;
+	return WorldClickPos;
 }
 
 void Window::onCLick()
 {
 	if (isClick) 
 	{
-		Picker(getRay());
+		Picker(getRayVector(),getRayOrigin());
 		isClick = false;
 	}
 	else return;
@@ -401,31 +396,91 @@ void Window::onCLick()
 
 
 
-void Window::Picker(glm::vec3 rayHit)
+void Window::Picker(glm::vec3 rayVector,glm::vec3 rayOrigin)
 {
-	int r = 1;
-	glm::vec3 intersection(0.0f, 0.0f, 0.0f);
-	if (scene->GetMode() == 0)//object mode
-	{
-		std::cout << "Object Mode" << endl;
-		
-
-		for (int i = 0; i < scene->m_Objects.size(); i++)
+	glm::vec3 intersectionPoint;
+	Triangle t;
+	for (int k = 0; k < scene->m_Objects.size(); k++) //loop through each model
+	{	
+		size_t imax = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh().size();
+		for (int i = 0; i < imax; i++) //loop through each mesh in each model
 		{
-			
-			glm::vec3 centre = scene->m_Objects[i]->getComponent<TransformComponent>()->m_position;
-			
-	
-		}
-		
-	}
-	else if (scene->GetMode() == 1)//face mode
-	{
-		//scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel().getMesh
-		//go through each face in the mesh, calculate the distance between ray hit and the mesh's centre, if the distance is less than the objects width, set it to be the focus.
+			size_t jmax = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[i].vertices.size()/3;
+			trunc(jmax);
+			for (int j = 0; j < jmax; j++) //loop through each tri in each mesh.
+			{
+				
+					t.vertA = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].vertices[0 + (3 * j)].position;
+					t.vertB = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].vertices[1 + (3 * j)].position;
+					t.vertC = scene->m_Objects[k]->getComponent<ModelComponent>()->getModel().getMesh()[0].vertices[2 + (3 * j)].position;
 
+					if (RayIntersectsTriangle(rayOrigin, rayVector, t, intersectionPoint))
+					{
+						std::cout << "hit" << std::endl;
+						if (scene->GetMode() == 0)//obj mode
+						{
+							scene->SetFocus(k);
+
+							return;
+						}
+						if (scene->GetMode() == 1)//face mode
+						{
+							scene->vertsSelected = true;
+							scene->m_vertsSelected[0] = t.vertA;
+							scene->m_vertsSelected[1] = t.vertB;
+							scene->m_vertsSelected[2] = t.vertC;
+							indices[0] = j;
+							indices[1] = 1 + (3 * j);
+							indices[2] = 2 + (3 * j);
+
+						}
+					}
+			}	
+		}
 	}
-	
+
+}
+
+//C++ implementation of the Moller-Trumbore intersection algorithm, from: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+bool Window::RayIntersectsTriangle(glm::vec3 rayOrigin, glm::vec3 rayVector, Triangle inTriangle, glm::vec3 & outIntersectionPoint)
+{
+	glm::vec3 edge1, edge2, h, s, q;
+	float a, f, u, v;
+	edge1 = inTriangle.vertB - inTriangle.vertA;
+	edge2 = inTriangle.vertC - inTriangle.vertA;
+
+	h = glm::cross(rayVector, edge2);
+	a = glm::dot(h,edge1);
+	if (a > -EPSILON && a < EPSILON)
+	{
+		return false;
+	}
+
+	f = 1 / a;
+	s = rayOrigin - inTriangle.vertA;
+	u = f * (glm::dot(h,s));
+	if (u < 0.0 || u > 1.0)
+	{
+		return false;
+	}
+
+	q = glm::cross(s, edge1);
+	v = f * (glm::dot(q,rayVector));
+	if (v < 0.0 || u + v > 1.0)
+	{
+		return false;
+	}
+	//at this point we can calculate t to find the intesection point on the line.
+	float t = f * (glm::dot(q,edge2));
+	if (t > EPSILON) // ray intersection
+	{
+		outIntersectionPoint = rayOrigin + rayVector * t;
+		return true;
+	}
+	else //there is a line intersection but no ray intersection
+	{
+		return false;
+	}
 
 }
 

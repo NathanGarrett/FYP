@@ -15,8 +15,9 @@ public:
 	void MirrorGeometryXY(Model *model, float zOffset);
 	void MirrorGeometryYZ(Model *model, float xOffset);
 	void MirrorGeometryZX(Model *model, float yOffset);
-	void ExtrudeFace(Model *model, glm::vec3 mag);
+	void ExtrudeFace(Model *model, int v1, int v2, int v3, glm::vec3 mag);
 	void BevelObject(Model *model, float offset);
+	void CommitTransform(Model* model,glm::mat4 modmat);
 private:
 	CLHandler handler;
 

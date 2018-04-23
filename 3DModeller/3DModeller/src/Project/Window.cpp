@@ -170,9 +170,9 @@ void Window::InitUI()
 		guiTransform->addVariable("Y", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.y,true);
 		guiTransform->addVariable("Z", scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->m_position.z,true);
 		guiTransform->addGroup("Rotation");
-		guiTransform->addButton("Roll", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->roll(1.f); });
-		guiTransform->addButton("Pitch", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->pitch(1.f); });
-		guiTransform->addButton("Yaw", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->yaw(1.f); });
+		guiTransform->addButton("Roll", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->roll(0.001f); });
+		guiTransform->addButton("Pitch", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->pitch(0.001f); });
+		guiTransform->addButton("Yaw", [&]() { scene->m_Objects[scene->GetFocus()]->getComponent<TransformComponent>()->yaw(0.001f); });
 	
 		//Tools
 		guiToolbar->addGroup("Primitives");
@@ -180,8 +180,9 @@ void Window::InitUI()
 		guiToolbar->addButton("Spawn Cylinder",		[&]() { scene->GenModel("cylinder.obj");	});
 		guiToolbar->addButton("Spawn Sphere",		[&]() { scene->GenModel("sphere.obj");		});
 		guiToolbar->addGroup("Selection Mode");
+		guiToolbar->addButton("Cycle Mode", [&]() {scene->CycleModes(); });
 		guiToolbar->addGroup("Mirror Geometry");
-		guiToolbar->addVariable("Offset", offset, true)->setDefaultValue("2.5");
+		guiToolbar->addVariable("Offset", offset, true);
 		guiToolbar->addButton("Mirror XY", [&]() { command.MirrorGeometryXY(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
 		guiToolbar->addButton("Mirror YZ", [&]() { command.MirrorGeometryYZ(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
 		guiToolbar->addButton("Mirror ZX", [&]() { command.MirrorGeometryZX(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(), offset); });
@@ -190,7 +191,6 @@ void Window::InitUI()
 		guiToolbar->addVariable("Extrude Mag y", ymag, true);
 		guiToolbar->addVariable("Extrude Mag z", zmag, true);
 		guiToolbar->addButton("Extrude", [&]() { command.ExtrudeFace(&scene->m_Objects[scene->GetFocus()]->getComponent<ModelComponent>()->getModel(),indices[0],indices[1],indices[2],meshNumber,scene->GetMode(),glm::vec3(xmag,ymag,zmag)); });
-		guiToolbar->addGroup("Bevel Edge");
 		//File IO
 		guiImporterExporter->addGroup("Import a model from folder");
 		guiImporterExporter->addVariable("File Name:", sfileName, true);

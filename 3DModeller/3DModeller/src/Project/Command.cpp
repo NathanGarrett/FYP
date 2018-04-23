@@ -147,39 +147,50 @@ void Command::MirrorGeometryZX(Model * model, float yOffset)
 	std::cout << "Mirror-ZX Done, v_meshes size: " << model->getMeshCount() << std::endl;
 }
 
-void Command::ExtrudeFace(Model * model, int v1, int v2, int v3,int meshIndex, glm::vec3 mag)
+void Command::ExtrudeFace(Model * model, int v1, int v2, int v3,int meshIndex,int mode, glm::vec3 mag)
 {
 
-	glm::mat4 Extrude =
-	{	1+mag.x,       0,        0,		    0,
-		   0,		1+mag.y,     0,			0,
-		   0,		   0,	   1+mag.z,		0,
+	glm::mat4 ExtrudeObject =
+	{	1+mag.x,       0,        0,		    mag.x,
+		   0,		1+mag.y,     0,			mag.y,
+		   0,		   0,	   1+mag.z,		mag.z,
 		   0,		   0,        0,			1 };
-
-	Mesh newMesh(model->getMesh()[meshIndex]); //duplicate specific mesh
-	//calculate surface normal
-	glm::vec3 Vector1 = newMesh.vertices[v1].position - newMesh.vertices[v2].position;
-	glm::vec3 Vector2 = newMesh.vertices[v1].position - newMesh.vertices[v3].position;
-	glm::vec3 surfaceNormal = glm::cross(Vector1, Vector2);
+	glm::mat4 ExtrudeFace =
+	{ 1 + mag.x,       0,        0,		    0,
+		0,		1 + mag.y,     0,			0,
+		0,		   0,	   1 + mag.z,		0,
+		0,		   0,        0,			1 };
 	
-
-
-	for (int i = 0; i < newMesh.vertices.size(); i++)
+	
+	if (mode == 0)
 	{
-		glm::vec3 newPos = handler.MAT_VEC_MULT(newMesh.vertices[i].position, Extrude);
-		newMesh.vertices[i].position = newPos;
+		Mesh newMesh(model->getMesh()[meshIndex]); //duplicate specific mesh
+		for (int i = 0; i < newMesh.vertices.size(); i++)
+		{
+			glm::vec3 newPos = handler.MAT_VEC_MULT(newMesh.vertices[i].position, ExtrudeObject);
+			newMesh.vertices[i].position = newPos;
+		}
+		newMesh.setupMesh();
+		model->getMesh().push_back(newMesh);
+	}
+
+
+	if (mode == 1)
+	{
+		//calculate surface normal
+		model->getMesh()[meshIndex].vertices[v1].position = handler.MAT_VEC_MULT(model->getMesh()[meshIndex].vertices[v1].position, ExtrudeFace);
+		model->getMesh()[meshIndex].vertices[v2].position = handler.MAT_VEC_MULT(model->getMesh()[meshIndex].vertices[v2].position, ExtrudeFace);
+		model->getMesh()[meshIndex].vertices[v3].position = handler.MAT_VEC_MULT(model->getMesh()[meshIndex].vertices[v3].position, ExtrudeFace);
+
+		model->getMesh()[meshIndex].setupMesh();
 	}
 	
-	newMesh.setupMesh();
-	model->getMesh().push_back(newMesh);
+	
 	
 	std::cout << "Extrude Done" <<std::endl;
 
 }
 
-void Command::BevelObject(Model * model, float offset)
-{
-}
 void Command::CommitTransform(Model * model, glm::mat4 modmat)
 {
 	for (int i = 0; i < model->getMeshCount(); i++)

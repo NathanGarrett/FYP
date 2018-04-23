@@ -31,11 +31,13 @@
     <ClInclude Include="include\Project\SceneObject.h" />
     <ClInclude Include="include\Project\Shader.h" />
     <ClInclude Include="include\Project\TransformComponent.h" />
+    <ClInclude Include="include\Project\UI.h" />
     <ClInclude Include="include\Project\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GLAD\glad.c" />
     <ClCompile Include="src\Project\Camera.cpp" />
+    <ClCompile Include="src\Project\CLHandler.cpp" />
     <ClCompile Include="src\Project\Command.cpp" />
     <ClCompile Include="src\Project\drawable.cpp" />
     <ClCompile Include="src\Project\main.cpp" />
@@ -43,6 +45,7 @@
     <ClCompile Include="src\Project\Model.cpp" />
     <ClCompile Include="src\Project\Scene.cpp" />
     <ClCompile Include="src\Project\Shader.cpp" />
+    <ClCompile Include="src\Project\UI.cpp" />
     <ClCompile Include="src\Project\Window.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -57,6 +57,9 @@
     <ClInclude Include="include\Project\Command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Project\UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Project\main.cpp">
@@ -87,6 +90,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\CLHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

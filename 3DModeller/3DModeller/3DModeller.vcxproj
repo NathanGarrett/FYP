@@ -31,7 +31,6 @@
     <ClInclude Include="include\Project\SceneObject.h" />
     <ClInclude Include="include\Project\Shader.h" />
     <ClInclude Include="include\Project\TransformComponent.h" />
-    <ClInclude Include="include\Project\UI.h" />
     <ClInclude Include="include\Project\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +44,6 @@
     <ClCompile Include="src\Project\Model.cpp" />
     <ClCompile Include="src\Project\Scene.cpp" />
     <ClCompile Include="src\Project\Shader.cpp" />
-    <ClCompile Include="src\Project\UI.cpp" />
     <ClCompile Include="src\Project\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
